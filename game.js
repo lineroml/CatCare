@@ -1,14 +1,14 @@
-import{ScenaP} from './ScenaP.js';
+import { ScenaP } from './ScenaP.js';
 const config = {
     type: Phaser.AUTO,
     width: 800,
     height: 600,
     scene: [ScenaP],
-    physics:{
+    physics: {
         default: 'arcade',
         arcade: {
             gravity: { y: 300 },
-            debug: false
+            debug: true
         }
     }
 };
