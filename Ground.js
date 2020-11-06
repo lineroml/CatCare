@@ -8,7 +8,7 @@ export class Ground {
 
     create() {
         this.plat = this.scene.physics.add.staticGroup();
-        this.scene.physics.add.collider(this.plat, this.scene.player.player, () => this.scene.player.jump(), null, this);
+        
     }
 
     addPlataform(x, y, type) {

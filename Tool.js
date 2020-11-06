@@ -4,10 +4,6 @@ export class Tool {
         this.selectedTool = undefined;
     }
 
-    create(player) {
-
-    }
-
     selectFood() {
         this.selectedTool = 'FOOD';
     }
