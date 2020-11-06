@@ -1,4 +1,5 @@
 import { Tool } from './Tool.js';
+
 export class Player {
     constructor(scena) {
         this.scene = scena;
@@ -15,10 +16,7 @@ export class Player {
         this.player = this.scene.physics.add.image(50, 0, 'player');
         this.player.setCollideWorldBounds(true);
 
-
-        this.scene.physics.add.collider(this.scene.plataforms, this.player, this.movement, null, this);
-
-
+        
         this.scene.physics.add.overlap(this.scene.shelter.food, this.player, this.pickUpFood, () => this.eKey.isDown, this);
         this.scene.physics.add.overlap(this.scene.shelter.water, this.player, this.pickUpWater, () => this.eKey.isDown, this);
         this.scene.physics.add.overlap(this.scene.shelter.med, this.player, this.pickUpMed, () => this.eKey.isDown, this);
