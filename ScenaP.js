@@ -18,17 +18,18 @@ export class ScenaP extends Phaser.Scene {
     }
 
     create() {
+        //imagen de fondo y camara
         var bg = this.add.image(0, 0, 'bg').setOrigin(0, 0);
         this.physics.world.setBounds(0, 0, bg.displayWidth, bg.displayHeight);
         this.cameras.main.setBounds(0, 0, bg.displayWidth, bg.displayHeight)
-
+        //imagen de fondo y camara
 
         //Puestos de reabastecimiento
         this.shelter.create();
-        this.shelter.addShelter(200, 450, 'FOOD');
-        this.shelter.addShelter(300, 450, 'WATER');
-        this.shelter.addShelter(400, 450, 'MED');
-        this.shelter.addShelter(500, 450, 'FUN');
+        this.shelter.addShelter(200, 600, 'MED');
+        this.shelter.addShelter(1000, 600, 'FOOD');
+        this.shelter.addShelter(900, 600, 'WATER');
+        this.shelter.addShelter(1500, 600, 'FUN');
         //Puestos de reabastecimiento
 
 
@@ -38,12 +39,18 @@ export class ScenaP extends Phaser.Scene {
 
         //Creando plataformas
         this.plataforms.create();
-        this.plataforms.addPlataform(400, 550, 'B');
-        this.plataforms.addPlataform(600, 400, 'S');
+        for (let i = 0; i < 2; i++) {
+            this.plataforms.addPlataform(800*i, bg.displayHeight-100, 'B')
+        }
+        for (let i = 0; i < 3; i++) {
+            this.plataforms.addPlataform(600*i+(i+1)*70, bg.displayHeight-220, 'S');
+        }
         //Creando plataformas
 
+        
         //Enfocando camara al jugador
         this.cameras.main.startFollow(this.player.player);
+        //Enfocando camara al jugador
     }
     update() {
         this.player.update();
