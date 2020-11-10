@@ -2,6 +2,7 @@ import { Player } from './Player.js';
 import { Shelter } from './Shelter.js';
 import { Ground } from './Ground.js';
 import { Plate } from './Plate.js';
+import {Judge} from './Judge.js';
 
 export class ScenaP extends Phaser.Scene {
     constructor() {
@@ -9,7 +10,8 @@ export class ScenaP extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('bg', './resources/game/bg.png');
+        this.load.image('bg', './resources/game/BackGround/bg.png');
+        this.load.image('testcat','./resources/game/Entities/Cats/Green/cat.png');
 
         this.plataforms = new Ground(this);
 
@@ -18,6 +20,9 @@ export class ScenaP extends Phaser.Scene {
         this.shelter = new Shelter(this);
 
         this.plates = [new Plate(this,'FOOD'),new Plate(this,'WATER')];
+
+        this.judge = new Judge(this,[1,10],100);
+        
     }
 
     create() {
@@ -30,10 +35,10 @@ export class ScenaP extends Phaser.Scene {
 
         //Puestos de reabastecimiento
         this.shelter.create();
-        this.shelter.addShelter(200, 620, 'MED');
-        this.shelter.addShelter(1000, 620, 'FOOD');
-        this.shelter.addShelter(900, 620, 'WATER');
-        this.shelter.addShelter(1500, 620, 'FUN');
+        this.shelter.addShelter(200, 515, 'MED');
+        this.shelter.addShelter(1300, 515, 'FOOD');
+        this.shelter.addShelter(900, 515, 'WATER');
+        this.shelter.addShelter(1600, 515, 'FUN');
         //Puestos de reabastecimiento
 
 
@@ -43,7 +48,7 @@ export class ScenaP extends Phaser.Scene {
             this.plataforms.addPlataform(540*i, bg.displayHeight-100, 'B')
         }
         for (let i = 0; i < 3; i++) {
-            this.plataforms.addPlataform(544*i+(i+1)*115, bg.displayHeight-220, 'S');
+            this.plataforms.addPlataform(544*i+(i+1)*130, bg.displayHeight-300, 'S');
         }
         //Creando plataformas
 
@@ -61,6 +66,11 @@ export class ScenaP extends Phaser.Scene {
         //Enfocando camara al jugador
         this.cameras.main.startFollow(this.player.player);
         //Enfocando camara al jugador
+
+        this.testcat = this.physics.add.image(1010,200,'testcat');
+        this.physics.add.collider(this.testcat,this.plataforms.plat)
+
+        this.judge.create();
     }
     update() {
         this.player.update();

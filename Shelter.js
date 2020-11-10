@@ -2,10 +2,10 @@ export class Shelter {
     constructor(scena, name, path) {
         this.scene = scena;
         this.name = name;
-        this.scene.load.image('comida', './resources/game/food.png');
-        this.scene.load.image('agua', './resources/game/water.png');
-        this.scene.load.image('botiquin', './resources/game/med.png');
-        this.scene.load.image('juguete', './resources/game/fun.png');
+        this.scene.load.image('comida', './resources/game/Shelters/food.png');
+        this.scene.load.image('agua', './resources/game/Shelters/water.png');
+        this.scene.load.image('botiquin', './resources/game/Shelters/med.png');
+        this.scene.load.image('juguete', './resources/game/Shelters/fun.png');
     }
 
     create() {

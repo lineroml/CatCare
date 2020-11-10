@@ -2,8 +2,8 @@ export class Ground {
     constructor(scena) {
         this.amount = -1;
         this.scene = scena;
-        this.scene.load.image('B', './resources/game/plat.png');
-        this.scene.load.image('S', './resources/game/PLAT2.png');
+        this.scene.load.image('B', './resources/game/Plataforms/plat.png');
+        this.scene.load.image('S', './resources/game/Plataforms/PLAT2.png');
     }
 
     create() {
