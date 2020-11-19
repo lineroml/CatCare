@@ -1,7 +1,6 @@
 export class Shelter {
-    constructor(scena, name, path) {
+    constructor(scena) {
         this.scene = scena;
-        this.name = name;
         this.scene.load.image('comida', '/resources/game/Shelters/food.png');
         this.scene.load.image('agua', '/resources/game/Shelters/water.png');
         this.scene.load.image('botiquin', '/resources/game/Shelters/med.png');
@@ -30,7 +29,6 @@ export class Shelter {
                 this.fun.create(x, y, 'juguete');
                 break
         }
-
     }
 }
 

@@ -11,7 +11,6 @@ export class ScenaP extends Phaser.Scene {
 
     preload() {
         this.load.image('bg', '/resources/game/BackGround/bg.png');
-        this.load.image('testcat', '/resources/game/Entities/Cats/Green/cat.png');
 
         this.plataforms = new Ground(this);
 
@@ -19,7 +18,7 @@ export class ScenaP extends Phaser.Scene {
 
         this.shelter = new Shelter(this);
 
-        this.plates = [new Plate(this, 'FOOD'), new Plate(this, 'WATER')];
+        this.plates = [new Plate(this, 'FOOD',0), new Plate(this, 'WATER',1)];
 
         this.judge = new Judge(this, [1, 10], 100);
 
@@ -29,8 +28,7 @@ export class ScenaP extends Phaser.Scene {
         //imagen de fondo y camara
         var bg = this.add.image(0, 0, 'bg').setOrigin(0, 0);
         this.physics.world.setBounds(0, 0, bg.displayWidth, bg.displayHeight);
-        this.cameras.main.setBounds(0, 0, bg.displayWidth, bg.displayHeight)
-        //imagen de fondo y camara
+        this.cameras.main.setBounds(0, 0, bg.displayWidth, bg.displayHeight);
 
 
         //Puestos de reabastecimiento
@@ -39,7 +37,6 @@ export class ScenaP extends Phaser.Scene {
         this.shelter.addShelter(1300, 515, 'FOOD');
         this.shelter.addShelter(900, 515, 'WATER');
         this.shelter.addShelter(1600, 515, 'FUN');
-        //Puestos de reabastecimiento
 
 
         //Creando plataformas
@@ -50,13 +47,11 @@ export class ScenaP extends Phaser.Scene {
         for (let i = 0; i < 3; i++) {
             this.plataforms.addPlataform(544 * i + (i + 1) * 130, bg.displayHeight - 300, 'S');
         }
-        //Creando plataformas
 
 
         //Platos de agua y comida
         this.plates[0].put(1000, 500);//comida
         this.plates[1].put(1200, 500);//agua
-        //Platos de agua y comida
 
 
         //Creando Jugador
@@ -65,10 +60,6 @@ export class ScenaP extends Phaser.Scene {
 
         //Enfocando camara al jugador
         this.cameras.main.startFollow(this.player.player);
-        //Enfocando camara al jugador
-
-        this.testcat = this.physics.add.image(1010, 200, 'testcat');
-        this.physics.add.collider(this.testcat, this.plataforms.plat)
 
         this.judge.create();
     }

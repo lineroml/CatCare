@@ -41,6 +41,17 @@ export class Player {
 
     }
 
+    getTool(){
+        return this.tool.selectedTool
+    }
+
+    getX(){
+        return this.player.x;
+    }
+
+    getY(){
+        return this.player.y;
+    }
     update() {
         this.move()
 
@@ -82,28 +93,29 @@ export class Player {
         }
     }
 
-    toolAndPlate(plate, player) {
+    toolAndPlate(plate, _) {
         var tempPlate = this.selectedPlate(plate);
         if ( this.tool.selectedTool == tempPlate.type) {
             tempPlate.fill();;
             this.tool.selectedTool = undefined;
+            this.scene.socket.emit('changePlate')
         }
 
     }
 
-    pickUpFood(player, group) {
+    pickUpFood() {
         this.tool.selectFood();
     }
 
-    pickUpWater(player, group) {
+    pickUpWater() {
         this.tool.selectWater();
     }
 
-    pickUpMed(player, group) {
+    pickUpMed() {
         this.tool.selectMed();
     }
 
-    pickUpFun(player, group) {
+    pickUpFun() {
         this.tool.selectFun();
     }
 

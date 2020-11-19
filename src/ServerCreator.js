@@ -37,15 +37,15 @@ export class ServerCreator extends Phaser.Scene {
 
 
         //portales
-        this.firstWorld = this.physics.add.image(100,705,'singleP').setScale(0.5);
-        this.secondWorld = this.physics.add.image(500,705,'multiP').setScale(0.5);
-        this.physics.add.collider(this.plataforms.plat, this.firstWorld);
+//        this.firstWorld = this.physics.add.image(100,705,'singleP').setScale(0.5);
+        this.secondWorld = this.physics.add.image(100,705,'multiP').setScale(0.5);
+//        this.physics.add.collider(this.plataforms.plat, this.firstWorld);
         this.physics.add.collider(this.plataforms.plat, this.secondWorld);
-
+/*
         this.physics.add.overlap(this.player.player,this.firstWorld,()=>{
             //this.scene.start("test");
         },()=>{return this.player.eKey.isDown;},this);
-
+*/
         this.physics.add.overlap(this.player.player,this.secondWorld,()=>{
             var selectedWorld = "MPtest";
             this.socket.emit("newGameS",{select: selectedWorld})
@@ -62,8 +62,6 @@ export class ServerCreator extends Phaser.Scene {
                 players: data.players,
                 socket: this.socket
             }
-            console.log(data);
-            console.log(data.select);
             this.scene.stop();
             this.scene.start(data.select,send);
         });
