@@ -107,7 +107,7 @@ export class MPtest extends Phaser.Scene {
                             var t = (plate.type == 'FOOD') ? 'fPlate' : 'wPlate';
                             plate.plate.setTexture(t);
                         } else {
-                            plate.plate.setTexture('plate')
+                            plate.plate.setTexture('plate');
                         }
                     }
                 }

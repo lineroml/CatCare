@@ -7,7 +7,6 @@ export class ServerCreator extends Phaser.Scene {
 
     preload() {
         this.load.image('bg', '/resources/game/BackGround/bg.png');
-        this.load.image('testcat', '/resources/game/Entities/Cats/Green/cat.png');
 
         this.plataforms = new Ground(this);
 
@@ -48,7 +47,7 @@ export class ServerCreator extends Phaser.Scene {
 */
         this.physics.add.overlap(this.player.player,this.secondWorld,()=>{
             var selectedWorld = "MPtest";
-            this.socket.emit("newGameS",{select: selectedWorld})
+            this.socket.emit("newGameS",{select: selectedWorld});
         },()=>{return this.player.eKey.isDown;},this);
         //portales
 
@@ -66,6 +65,7 @@ export class ServerCreator extends Phaser.Scene {
             this.scene.start(data.select,send);
         });
     }
+    
     update() {
         this.player.update();
     }

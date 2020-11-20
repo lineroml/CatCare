@@ -8,12 +8,14 @@ app.set("port", process.env.PORT || 3000);
 
 
 app.use(express.static(path.join(__dirname, "src")));
+
 var server = app.listen(app.get("port"), () => {
   console.log("Server on port", app.get("port"));
 });
 
 var SocketIO = require("socket.io");
 let io = SocketIO(server);
+
 this.players = {};
 this.plates = {};
 var numPlayers = 0;

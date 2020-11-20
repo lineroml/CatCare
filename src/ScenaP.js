@@ -3,6 +3,7 @@ import { Shelter } from '/Shelter.js';
 import { Ground } from '/Ground.js';
 import { Plate } from '/Plate.js';
 import { Judge } from '/Judge.js';
+import { Cat } from '/Cat.js';
 
 export class ScenaP extends Phaser.Scene {
     constructor() {
@@ -11,6 +12,8 @@ export class ScenaP extends Phaser.Scene {
 
     preload() {
         this.load.image('bg', '/resources/game/BackGround/bg.png');
+        this.load.image('zoneRed', '/resources/game/Entities/Cats/zoneRed.png');
+        this.load.image('zoneYellow', '/resources/game/Entities/Cats/zoneYellow.png');
 
         this.plataforms = new Ground(this);
 
@@ -21,6 +24,8 @@ export class ScenaP extends Phaser.Scene {
         this.plates = [new Plate(this, 'FOOD',0), new Plate(this, 'WATER',1)];
 
         this.judge = new Judge(this, [1, 10], 100);
+
+        this.cat = new Cat(this,'yellow','YELLOW');
 
     }
 
@@ -58,6 +63,8 @@ export class ScenaP extends Phaser.Scene {
         this.player.create(this.plataforms.plat);
 
 
+        this.cat.create(bg);
+
         //Enfocando camara al jugador
         this.cameras.main.startFollow(this.player.player);
 
@@ -65,9 +72,8 @@ export class ScenaP extends Phaser.Scene {
     }
     update() {
         this.player.update();
+        this.cat.update();
     }
-
-
 
 
 }

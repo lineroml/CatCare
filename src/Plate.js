@@ -12,13 +12,11 @@ export class Plate {
     }
 
     put(x, y) {
-
         this.plate = this.scene.physics.add.image(x, y, 'plate');
         this.scene.physics.add.collider(this.plate, this.scene.plataforms.plat);
         if (this.scene.socket != undefined) {
             this.scene.socket.emit("platePut", { password: this.scene.socket.id, ID: this.ID, x: x, y: y });
         }
-        console.log(this.scene.plates);
     }
 
     fill() {
@@ -29,7 +27,9 @@ export class Plate {
             if (this.scene.socket != undefined) {
                 this.scene.socket.emit("plateStateC", { ID: this.ID, full: true });
             }
+            return true;
         }
+        return false;
     }
 
     use() {
