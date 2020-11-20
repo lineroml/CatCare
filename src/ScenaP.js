@@ -25,8 +25,10 @@ export class ScenaP extends Phaser.Scene {
 
         this.judge = new Judge(this, [1, 10], 100);
 
-        this.cat = new Cat(this,'yellow','YELLOW');
-
+        this.cat1 = new Cat(this,'yellow','YELLOW');
+        this.cat2 = new Cat(this,'green','GREEN');
+        this.cat3 = new Cat(this,'red','RED');
+        
     }
 
     create() {
@@ -63,7 +65,9 @@ export class ScenaP extends Phaser.Scene {
         this.player.create(this.plataforms.plat);
 
 
-        this.cat.create(bg);
+        this.cat1.create(bg);
+        this.cat2.create(bg);
+        this.cat3.create(bg);
 
         //Enfocando camara al jugador
         this.cameras.main.startFollow(this.player.player);
@@ -72,7 +76,9 @@ export class ScenaP extends Phaser.Scene {
     }
     update() {
         this.player.update();
-        this.cat.update();
+        this.cat1.update();
+        this.cat2.update();
+        this.cat3.update();
     }
 
 

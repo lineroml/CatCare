@@ -27,6 +27,7 @@ export class Plate {
             if (this.scene.socket != undefined) {
                 this.scene.socket.emit("plateStateC", { ID: this.ID, full: true });
             }
+            this.scene.judge.addPoints(10)
             return true;
         }
         return false;

@@ -74,7 +74,7 @@ export class Player {
 
     }
 
-    jump() {
+    jump() { 
         if (this.cursors.down.isUp & this.cursors.up.isDown) {
             this.player.setVelocityY(-250);//puede saltar 100px
         }
