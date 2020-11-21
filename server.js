@@ -18,6 +18,7 @@ let io = SocketIO(server);
 
 this.players = {};
 this.plates = {};
+this.cats = {};
 var numPlayers = 0;
 
 io.on("connection", (socket) => {
@@ -88,10 +89,51 @@ io.on("connection", (socket) => {
     });
   });
 
-  socket.on("updateRequest", () => {
-    socket.emit("update", { players: this.players, plates: this.plates });
+  socket.on("newCat",(data) =>{
+    if(data.password == this.primeControler){
+      this.cats[data.name] = {
+        name: data.name,
+        type: data.type,
+        state: data.state,
+        x: data.x,
+        y: data.y
+      };
+      socket.broadcast.emit("mindlessCat");
+    }
+  });
+  socket.on("catPos", (data)=> {
+    if(data.password == this.primeControler){
+      var cat = this.cats[data.name];
+      cat.x = data.x;
+      cat.y = data.y;
+    }
   });
 
+  socket.on("updatePoints",(data)=>{
+    var player = this.players[data.ID];
+    player.points = data.score;
+  });
+
+  socket.on("catUpdate",(data)=>{
+    var cat = this.cats[data.name];
+    cat.x = data.x;
+    cat.y = data.y;
+    cat.state = data.state;
+  });
+
+  socket.on("playerApproachCat",(data)=>{
+    socket.emit("catScape",data);
+    socket.broadcast.emit("catScape",data);
+  });
+
+  socket.on("updateRequest", () => {
+    socket.emit("update", { players: this.players, plates: this.plates, cats: this.cats });
+  });
+
+  socket.on("ItEnded",()=>{
+    socket.emit("STOP");
+    socket.broadcast.emit("STOP");
+  });
   socket.on("disconnect", () => {
     numPlayers--;
     console.log("user disconnected", socket.id);

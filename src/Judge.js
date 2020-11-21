@@ -5,8 +5,8 @@ export class Judge {
         this.maxScore = maxScore;
         this.scene = scena;
         this.finish = false;
-        this.timer = this.scene.time.addEvent({ delay: 1000, callback: this.second, callbackScope: this, loop: true});
-        
+        this.timer = this.scene.time.addEvent({ delay: 1000, callback: this.second, callbackScope: this, loop: true });
+
     }
 
     create() {
@@ -25,11 +25,21 @@ export class Judge {
         });
     }
 
+    update() {
+        if (this.finish) {
+            this.scene.menu.setVisible(true);
+            if (this.scene.socket != undefined)
+                this.scene.socket.emit("ItEnded");
+        }
+    }
+
     second() {
         this.time[1]--;
         if (this.time[1] < 0) {
             this.time[1] = 59;
             this.time[0]--;
+            if (this.scene.socket != undefined)
+                this.scene.socket.emit("minutePass", { time: this.time, password: this.scene.socket.id });
         }
         if (this.time[0] == 0 & this.time[1] == 0) {
             this.timer.paused = true;
@@ -42,11 +52,16 @@ export class Judge {
         this.scoreText.setText(this.score + '/' + this.maxScore);
         if (this.score >= this.maxScore) {
             this.timer.paused = true;
+            this.finish = true;
         }
+        if (this.scene.socket != undefined)
+            this.scene.socket.emit("updatePoints", { ID: this.scene.socket.id, score: this.score });
     }
 
-    restPoints(points){
+    restPoints(points) {
         this.score -= points;
         this.scoreText.setText(this.score + '/' + this.maxScore);
+        if (this.scene.socket != undefined)
+            this.scene.socket.emit("updatePoints", { ID: this.scene.socket.id, score: this.score });
     }
 }

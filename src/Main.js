@@ -34,8 +34,16 @@ export class Main extends Phaser.Scene {
         this.player.create(this.plataforms.plat);
 
         //portales
+
+
         this.sp = this.physics.add.image(100,705,'singleP').setScale(0.5);
+
+
+
+
         this.mp = this.physics.add.image(500,705,'multiP').setScale(0.5);
+
+        
         this.physics.add.collider(this.plataforms.plat, this.sp);
         this.physics.add.collider(this.plataforms.plat, this.mp);
 

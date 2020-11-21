@@ -7,6 +7,8 @@ export class Player {
         this.cursors = scena.input.keyboard.createCursorKeys();
         this.dKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         this.eKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
+        this.tabKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TAB)
+        this.escKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
         this.tool = new Tool(this.scene);
     }
 
@@ -61,20 +63,27 @@ export class Player {
         return this.player.body.velocity.y
     }
     update() {
-        this.move()
+        this.move();
 
         if (this.dKey.isDown)
             this.tool.dropTool();
+            console.log(this.scene.menu,this.scene.socket);
+        if (this.scene.menu != undefined & this.scene.socket != undefined) {
+            if (this.escKey.isDown){//Tabla con la lista de jugadores
+                this.scene.menu.setVisible(true);
+            }else{
+                this.scene.menu.setVisible(false);
+            }
+        }
+
+        //escKey se utiliza para entrar al menu de pausa que aún no se ha creado
 
         this.text.setText(this.tool.selectedTool);
-        if (this.text.x != this.player.x - 20)
-            this.text.x = this.player.x - 20;
-        if (this.text.y != this.player.y - this.player.displayHeight / 2 - 21)
-            this.text.y = this.player.y - this.player.displayHeight / 2 - 21;
-
+        this.text.x = this.player.x - 20;
+        this.text.y = this.player.y - this.player.displayHeight / 2 - 21;
     }
 
-    jump() { 
+    jump() {
         if (this.cursors.down.isUp & this.cursors.up.isDown) {
             this.player.setVelocityY(-250);//puede saltar 100px
         }
@@ -130,6 +139,10 @@ export class Player {
         for (let i = 0; i < this.scene.plates.length; i++) {
             if (this.scene.plates[i].plate == plate) return this.scene.plates[i];
         }
+    }
+
+    dropTool() {
+        this.tool.dropTool();
     }
 
 }
