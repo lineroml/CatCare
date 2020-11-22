@@ -12,7 +12,10 @@ export class ServerCreator extends Phaser.Scene {
 
         this.player = new Player(this);
 
+        this.playerList = [];
+
         this.socket = io();
+
     }
 
     create() {
@@ -36,19 +39,13 @@ export class ServerCreator extends Phaser.Scene {
 
 
         //portales
-//        this.firstWorld = this.physics.add.image(100,705,'singleP').setScale(0.5);
-        this.secondWorld = this.physics.add.image(100,705,'multiP').setScale(0.5);
-//        this.physics.add.collider(this.plataforms.plat, this.firstWorld);
+        this.secondWorld = this.physics.add.image(100, 705, 'multiP').setScale(0.5);
         this.physics.add.collider(this.plataforms.plat, this.secondWorld);
-/*
-        this.physics.add.overlap(this.player.player,this.firstWorld,()=>{
-            //this.scene.start("test");
-        },()=>{return this.player.eKey.isDown;},this);
-*/
-        this.physics.add.overlap(this.player.player,this.secondWorld,()=>{
+
+        this.physics.add.overlap(this.player.player, this.secondWorld, () => {
             var selectedWorld = "MPtest";
-            this.socket.emit("newGameS",{select: selectedWorld});
-        },()=>{return this.player.eKey.isDown;},this);
+            this.socket.emit("newGameS", { select: selectedWorld, password: this.socket.id });
+        }, () => { return this.player.eKey.isDown; }, this);
         //portales
 
 
@@ -56,21 +53,44 @@ export class ServerCreator extends Phaser.Scene {
         this.cameras.main.startFollow(this.player.player);
         //Enfocando camara al jugador
 
-        this.socket.on("startGame",(data)=>{
+        this.socket.on("startGame", (data) => {
             var send = {
                 players: data.players,
-                socket: this.socket
+                socket: this.socket,
+                playerList: this.playerList
             }
             this.scene.stop();
-            this.scene.start(data.select,send);
+            this.scene.start(data.select, send);
+        });
+
+        this.socket.on("actualPlayers", (data) => {
+            this.setList(data);
+        });
+
+        this.socket.on("newPlayer", (data) => {
+            this.addPlayer(data);
+        });
+
+        this.socket.on("playerOut", (data) => {
+            var i = 0;
+            while (this.playerList[i] != data.ID) {
+                i++;
+            }
+            delete this.playerList[i];
         });
     }
-    
+
     update() {
         this.player.update();
     }
 
+    setList(list) {
+        Object.keys(list).forEach(id => {
+            this.playerList.push(list[id].ID);
+        });
+    }
 
-
-
+    addPlayer(player) {
+        this.playerList.push(player.ID);
+    }
 }

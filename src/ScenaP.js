@@ -14,7 +14,6 @@ export class ScenaP extends Phaser.Scene {
         this.load.image('bg', '/resources/game/BackGround/bg.png');
         this.load.image('zoneRed', '/resources/game/Entities/Cats/zoneRed.png');
         this.load.image('zoneYellow', '/resources/game/Entities/Cats/zoneYellow.png');
-        this.load.image('pauseMenu', '/resources/game/menu.png');
 
         this.plataforms = new Ground(this);
 
@@ -42,25 +41,21 @@ export class ScenaP extends Phaser.Scene {
 
         //Puestos de reabastecimiento
         this.shelter.create();
-        this.shelter.addShelter(200, 515, 'MED');
-        this.shelter.addShelter(1300, 515, 'FOOD');
-        this.shelter.addShelter(900, 515, 'WATER');
-        this.shelter.addShelter(1600, 515, 'FUN');
-
+        this.shelter.addShelter(200, 715, 'FOOD');
+        this.shelter.addShelter(600, 715, 'WATER');
+        this.shelter.addShelter(1000, 715, 'MED');
+        this.shelter.addShelter(1400, 715, 'FUN');
 
         //Creando plataformas
         this.plataforms.create();
         for (let i = 0; i < 7; i++) {
             this.plataforms.addPlataform(540 * i, bg.displayHeight - 100, 'B')
         }
-        for (let i = 0; i < 3; i++) {
-            this.plataforms.addPlataform(544 * i + (i + 1) * 130, bg.displayHeight - 300, 'S');
-        }
 
 
         //Platos de agua y comida
-        this.plates[0].put(1000, 700);//comida
-        this.plates[1].put(1200, 700);//agua
+        this.plates[0].put(750, 500);
+        this.plates[1].put(850, 500);
 
 
         //Creando Jugador
@@ -76,7 +71,6 @@ export class ScenaP extends Phaser.Scene {
         this.cameras.main.startFollow(this.player.player);
 
         this.judge.create();
-        this.menu = this.add.image(400,300,'pauseMenu').setScrollFactor(0,0).setVisible(false);
     }
     update() {
         this.player.update();
@@ -95,10 +89,11 @@ export class ScenaP extends Phaser.Scene {
             var cat = this.cats[i];
             cat.update();
             if (cat.state != 'NORMAL') {
-                this.catStates.push(this.add.text(100, 50 + 50 * num, cat.name + ': ' + cat.state, {
-                    fontSize: '20px',
+                this.catStates.push(this.add.text(50, 50 + 50 * num, cat.name + ': ' + cat.state, {
+                    fontSize: '25px',
                     fill: '#111',
-                    fontFamily: 'verdana, arial, sans-serif'
+                    fontFamily: 'pixel',
+                    backgroundColor: cat.color
                 }).setScrollFactor(0, 0));
                 num++;
             }

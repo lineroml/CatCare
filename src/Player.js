@@ -9,11 +9,12 @@ export class Player {
         this.eKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
         this.tabKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TAB)
         this.escKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
+        this.pKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P);
         this.tool = new Tool(this.scene);
     }
 
     create(plat) {
-
+        this.paused = false;
         this.player = this.scene.physics.add.image(26, Phaser.Math.Between(300, 600), 'player');
         this.player.setCollideWorldBounds(true);
 
@@ -36,9 +37,9 @@ export class Player {
 
 
         this.text = this.scene.add.text(this.player.x, this.player.y / 4, this.tool.selectedTool, {
-            fontSize: '20px',
+            fontSize: '30px',
             fill: '#111',
-            fontFamily: 'verdana, arial, sans-serif'
+            fontFamily: 'pixel'
         });
 
     }
@@ -62,21 +63,29 @@ export class Player {
     getVelocityY() {
         return this.player.body.velocity.y
     }
+    
     update() {
         this.move();
 
-        if (this.dKey.isDown)
+        if (this.dKey.isDown) {
             this.tool.dropTool();
-            console.log(this.scene.menu,this.scene.socket);
-        if (this.scene.menu != undefined & this.scene.socket != undefined) {
-            if (this.escKey.isDown){//Tabla con la lista de jugadores
-                this.scene.menu.setVisible(true);
-            }else{
-                this.scene.menu.setVisible(false);
-            }
+        }
+        if (this.paused) {
+            this.paused = false;
+            this.escKey.isDown = false;
+            this.pKey.isDown = false;
+        }
+        if (this.escKey.isDown & !this.paused & this.scene.scene.key != 'main') {
+            this.paused = true;
+            this.scene.scene.pause();
+            this.scene.scene.launch('PauseMenu', { key: this.scene.scene.key });
         }
 
-        //escKey se utiliza para entrar al menu de pausa que aún no se ha creado
+        if (this.pKey.isDown & !this.paused & this.scene.socket != null) {
+            this.paused = true;
+            this.scene.scene.launch('PlayersInfo', { playerList: this.scene.playerList, ID: this.scene.socket.id })
+        }
+
 
         this.text.setText(this.tool.selectedTool);
         this.text.x = this.player.x - 20;

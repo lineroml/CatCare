@@ -15,6 +15,7 @@ export class MPtest extends Phaser.Scene {
         this.socket = data.socket;
         this.infoOthers = {};
         this.otherPlayers = new OtherP(this);
+        this.playerList = data.playerList;
 
         var players = data.players;
         Object.keys(players).forEach(id => {
@@ -41,6 +42,7 @@ export class MPtest extends Phaser.Scene {
         this.load.image('zoneRed', '/resources/game/Entities/Cats/zoneRed.png');
         this.load.image('zoneYellow', '/resources/game/Entities/Cats/zoneYellow.png');
         this.load.image('pauseMenu', '/resources/game/menu.png');
+        this.load.image('goToMenu', '/resources/game/gotomenu.png');
 
         this.player = new Player(this);
 
@@ -53,7 +55,7 @@ export class MPtest extends Phaser.Scene {
         this.cats = [new Cat(this, 'green', 'GREEN')];
         this.catStates = [];
 
-        this.judge = new Judge(this,[5,0],100);
+        this.judge = new Judge(this, [5, 0], 100);
     }
     create() {
         this.listeners();
@@ -87,7 +89,12 @@ export class MPtest extends Phaser.Scene {
         this.judge.create();
 
         this.cameras.main.startFollow(this.player.player);
-        this.menu = this.add.image(400,300,'pauseMenu').setScrollFactor(0,0).setVisible(false);
+        this.menu = this.add.image(400, 300, 'pauseMenu').setScrollFactor(0, 0).setVisible(false);
+        this.goToStart = this.add.image(200, 150, 'goToMenu').setScrollFactor(0, 0).setScale(0.5, 0.5).setInteractive(new Phaser.Geom.Rectangle(200, 150, 375, 290), () => {
+            console.log('stopea todo')
+            this.scene.stop();
+            this.scene.start('main');
+        }).setVisible(false);
     }
 
     update() {
@@ -132,7 +139,6 @@ export class MPtest extends Phaser.Scene {
             });
             if (this.cats[0].mindlessCat) {
                 var cats = data.cats;
-                console.log("Me updateo")
                 for (let i = 0; i < this.cats.length; i++) {
                     var cat = this.cats[i];
                     var infoCat = cats[cat.name];
@@ -149,11 +155,16 @@ export class MPtest extends Phaser.Scene {
 
         }
         this.socket.on("playerOut", (data) => {
+            var i = 0;
+            while (this.playerList[i] != data.ID) {
+                i++;
+            }
+            delete this.playerList[i];
             this.otherPlayers.delete(data.ID);
             this.socket.emit("updateRequest");
         });
 
-        this.socket.on("STOP",()=>{
+        this.socket.on("STOP", () => {
             console.log("Ya ha terminado");
             this.menu.setVisible(true);
             this.scene.sleep();
@@ -169,7 +180,7 @@ export class MPtest extends Phaser.Scene {
         }
         return null;
     }
-catUpdate() {
+    catUpdate() {
         for (let i = 0; i < this.catStates.length; i++) {
             var cat = this.catStates[i];
             cat.destroy();
@@ -181,9 +192,10 @@ catUpdate() {
             cat.update();
             if (cat.state != 'NORMAL') {
                 this.catStates.push(this.add.text(100, 50 + 50 * num, cat.name + ': ' + cat.state, {
-                    fontSize: '20px',
+                    fontSize: '25px',
                     fill: '#111',
-                    fontFamily: 'verdana, arial, sans-serif'
+                    fontFamily: 'pixel',
+                    backgroundColor: cat.color
                 }).setScrollFactor(0, 0));
                 num++;
             }

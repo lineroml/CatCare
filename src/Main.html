@@ -2,6 +2,15 @@
 <html>
 <head>
     
+<style media='screen' type='text/css'>
+    @font-face {
+      font-family: pixel;
+      src: url('./resources/game/PIXELADE.TTF');
+      font-weight:400;
+      font-weight:normal;
+    }
+</style>
+<div style="font-family:pixel; position:absolute; left:-1000px; visibility:hidden;">.</div>
 </head>
 <script src="/socket.io/socket.io.js"></script>
 <body>
@@ -9,5 +18,4 @@
     <script src="./game.js" type="module"></script>
     <input type="button" onclick="location.href='index.html';" value="Take Me Back!" />
 </body>
-
 </html>

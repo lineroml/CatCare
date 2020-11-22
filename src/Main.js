@@ -7,6 +7,7 @@ export class Main extends Phaser.Scene {
     }
 
     preload() {
+        console.log('estoy en main');
         this.load.image('bg', '/resources/game/BackGround/bg.png');
 
         this.load.image('multiP', '/resources/game/portal1.png');

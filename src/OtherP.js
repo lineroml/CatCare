@@ -15,9 +15,9 @@ export class OtherP {
             var player = this.infoPlayers[id];
             this.players[player.ID] = this.scene.add.image(player.x, player.y, player.skin);
             this.textPlayers[player.ID] = this.scene.add.text(player.x, player.y / 4, player.tool, {
-                fontSize: '20px',
+                fontSize: '30px',
                 fill: '#111',
-                fontFamily: 'verdana, arial, sans-serif'
+                fontFamily: 'pixel'
             });
         });
     }

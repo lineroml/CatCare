@@ -3,6 +3,17 @@ export class Cat {
         this.scene = scena;
         this.type = type;
         this.name = name;
+        switch (this.type) {
+            case 'GREEN':
+                this.color = '#23FF00';
+                break;
+            case 'YELLOW':
+                this.color = '#FFFB00';
+                break;
+            default:
+                this.color = '#FF2D00';
+                break;
+        }
         var s = '/resources/game/Entities/Cats/' + type + '/' + name + '.png';
         this.scene.load.image(name, s);
         this.state = 'NORMAL';
@@ -47,9 +58,9 @@ export class Cat {
             this.action = false;
         }
         this.textName = this.scene.add.text(this.cat.x, this.cat.y - 25, this.name, {
-            fontSize: '20px',
+            fontSize: '40px',
             fill: '#111',
-            fontFamily: 'verdana, arial, sans-serif'
+            fontFamily: 'pixel'
         });
         if (!this.mindlessCat) {
             this.stateTimer = this.scene.time.addEvent(

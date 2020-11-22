@@ -10,18 +10,18 @@ export class Judge {
     }
 
     create() {
-        this.timeText = this.scene.add.text(400, 50, this.time[0] + ':' + this.time[1]).setScrollFactor(0, 0);
+        this.timeText = this.scene.add.text(400, 30, this.time[0] + ':' + this.time[1]).setScrollFactor(0, 0);
         this.scoreText = this.scene.add.text(400, 90, this.score + '/' + this.maxScore).setScrollFactor(0, 0);
         this.timeText.setStyle({
-            fontSize: '40px',
-            fontFamily: 'Arial',
+            fontSize: '80px',
+            fontFamily: 'pixel',
             color: '#FF0000',
             align: 'center'
         });
         this.scoreText.setStyle({
-            fontSize: '20px',
+            fontSize: '40px',
             fill: '#111',
-            fontFamily: 'verdana, arial, sans-serif'
+            fontFamily: 'pixel'
         });
     }
 

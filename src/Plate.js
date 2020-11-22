@@ -8,15 +8,12 @@ export class Plate {
         this.scene.load.image('fPlate', '/resources/game/Entities/fPlate.png');
         this.full = false;
         if (scena.socket != undefined)
-            this.scene.socket.emit("plateCreated", { password: scena.socket.id, ID: id, x: 100, y: 500, type: tipe, full: false })
+            this.scene.socket.emit("plateCreated", { password: scena.socket.id, ID: id, type: tipe, full: false })
     }
 
     put(x, y) {
         this.plate = this.scene.physics.add.image(x, y, 'plate');
         this.scene.physics.add.collider(this.plate, this.scene.plataforms.plat);
-        if (this.scene.socket != undefined) {
-            this.scene.socket.emit("platePut", { password: this.scene.socket.id, ID: this.ID, x: x, y: y });
-        }
     }
 
     fill() {
@@ -38,6 +35,7 @@ export class Plate {
         this.plate.setTexture('plate');
         if (this.scene.socket != undefined) {
             this.scene.socket.emit("plateStateC", { ID: this.ID, full: false });
+            this.scene.socket.emit("updateRequest");
         }
     }
 }
