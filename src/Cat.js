@@ -1,5 +1,6 @@
 export class Cat {
     constructor(scena, name, type) {
+        this.animation = 'Sleep';
         this.scene = scena;
         this.type = type;
         this.name = name;
@@ -15,7 +16,10 @@ export class Cat {
                 break;
         }
         var s = '/resources/game/Entities/Cats/' + type + '/' + name + '.png';
-        this.scene.load.image(name, s);
+        this.scene.load.spritesheet(name, s, {
+            frameWidth: 90,
+            frameHeight: 55
+        });
         this.state = 'NORMAL';
         if (this.scene.socket != undefined) {
             this.scene.socket.emit("newCat", {
@@ -41,6 +45,48 @@ export class Cat {
     }
 
     create(bg) {
+        this.scene.anims.create({
+            key: this.name+"RunR",
+            frames: this.scene.anims.generateFrameNumbers("player", { start: 0, end: 3 }),
+            frameRate: 8,
+            repeat: -1
+        });
+        this.scene.anims.create({
+            key: this.name+"RunL",
+            frames: this.scene.anims.generateFrameNumbers("player", { start: 4, end: 7 }),
+            frameRate: 8,
+            repeat: -1
+        });
+        this.scene.anims.create({
+            key: this.name+"MadR",
+            frames: this.scene.anims.generateFrameNumbers("player", { start: 8, end: 10 }),
+            frameRate: 8,
+            repeat: -1
+        });
+        this.scene.anims.create({
+            key: this.name+"MadL",
+            frames: this.scene.anims.generateFrameNumbers("player", { start: 12, end: 14 }),
+            frameRate: 8,
+            repeat: -1
+        });
+        this.scene.anims.create({
+            key: this.name+"standR",
+            frames: this.scene.anims.generateFrameNumbers("player", { start: 16, end: 18 }),
+            frameRate: 8,
+            repeat: -1
+        });
+        this.scene.anims.create({
+            key: this.name+"standL",
+            frames: this.scene.anims.generateFrameNumbers("player", { start: 20, end: 22 }),
+            frameRate: 8,
+            repeat: -1
+        });
+        this.scene.anims.create({
+            key: this.name+"Sleep",
+            frames: this.scene.anims.generateFrameNumbers("player", { start: 24, end: 26 }),
+            frameRate: 8,
+            repeat: -1
+        });
         var x = Phaser.Math.Between(100, bg.displayWidth - 150);
         var y = Phaser.Math.Between(bg.displayHeight - 300, bg.displayHeight - 200);
         if (this.scene.socket != undefined) {
@@ -133,6 +179,7 @@ export class Cat {
     move() {
         if (this.state != 'HUNGRY' & this.state != 'THIRSTY') {
             var choose = Phaser.Math.Between(0, 1);
+            this.cat.play(this.name+(choose == 1)? "RunR":"RunL");
             switch (this.type) {
                 case 'GREEN':
                     this.cat.setVelocityX((choose == 1) ? 200 : -200);
@@ -176,7 +223,15 @@ export class Cat {
                     }
 
                     this.scene.time.delayedCall(1200, () => {
-                        if (!this.action) this.cat.setVelocity(0);
+                        if (!this.action) {
+                            this.cat.setVelocity(0);
+                            if(choose == 1){
+                                var quieto = this.name+(Phaser.Math.Between(0,1) == 1)?"standR":"Sleep";
+                            }else{
+                                var quieto = this.name+(Phaser.Math.Between(0,1) == 1)?"standL":"Sleep";
+                            }
+                            this.cat.play(quieto);
+                        }
                     }, [], this);
                     break;
             }

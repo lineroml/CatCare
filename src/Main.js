@@ -27,7 +27,7 @@ export class Main extends Phaser.Scene {
         //Creando plataformas
         this.plataforms.create();
         for (let i = 0; i < 7; i++) {
-            this.plataforms.addPlataform(540 * i, bg.displayHeight - 100, 'B')
+            this.plataforms.addPlataform(500 * i, bg.displayHeight - 32, 'S')
         }
         //Creando plataformas
 
@@ -37,12 +37,12 @@ export class Main extends Phaser.Scene {
         //portales
 
 
-        this.sp = this.physics.add.image(100,705,'singleP').setScale(0.5);
+        this.sp = this.physics.add.image(100,400,'singleP').setScale(0.5);
 
 
 
 
-        this.mp = this.physics.add.image(500,705,'multiP').setScale(0.5);
+        this.mp = this.physics.add.image(500,400,'multiP').setScale(0.5);
 
         
         this.physics.add.collider(this.plataforms.plat, this.sp);

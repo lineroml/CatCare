@@ -3,7 +3,10 @@ import { Tool } from '/Tool.js';
 export class Player {
     constructor(scena) {
         this.scene = scena;
-        this.scene.load.image('player', '/resources/game/Entities/player.png');
+        this.scene.load.spritesheet('player', '/resources/game/Entities/spriteSheetPJ.png', {
+            frameWidth: 80,
+            frameHeight: 150
+        });
         this.cursors = scena.input.keyboard.createCursorKeys();
         this.dKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         this.eKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
@@ -11,11 +14,38 @@ export class Player {
         this.escKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
         this.pKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P);
         this.tool = new Tool(this.scene);
+        this.anime = false;
     }
 
     create(plat) {
+        this.scene.anims.create({
+            key: "playerRunR",
+            frames: this.scene.anims.generateFrameNumbers("player", { start: 4, end: 7 }),
+            frameRate: 8,
+            repeat: -1
+        });
+        this.scene.anims.create({
+            key: "idle",
+            frames: this.scene.anims.generateFrameNumbers("player", { start: 0, end: 0 }),
+            frameRate: 1,
+            repeat: -1
+        });
+        this.scene.anims.create({
+            key: "jumpfallR",
+            frames: this.scene.anims.generateFrameNumbers("player", { start: 9, end: 11 }),
+            frameRate: 1,
+            repeat: 0
+        });
+        this.scene.anims.create({
+            key: "playerWalkR",
+            frames: this.scene.anims.generateFrameNumbers("player", { start: 12, end: 15 }),
+            frameRate: 5,
+            repeat: -1
+        });
+        
+
         this.paused = false;
-        this.player = this.scene.physics.add.image(26, Phaser.Math.Between(300, 600), 'player');
+        this.player = this.scene.physics.add.sprite(26, Phaser.Math.Between(300, 600), 'player', 0);
         this.player.setCollideWorldBounds(true);
 
 
@@ -63,7 +93,7 @@ export class Player {
     getVelocityY() {
         return this.player.body.velocity.y
     }
-    
+
     update() {
         this.move();
 
@@ -93,8 +123,13 @@ export class Player {
     }
 
     jump() {
-        if (this.cursors.down.isUp & this.cursors.up.isDown) {
+        if (this.cursors.up.isDown) {
             this.player.setVelocityY(-250);//puede saltar 100px
+            console.log(this.player.body);
+            if ((this.player.body.velocity.x!= 0 | !this.anime)) {
+                this.anime = true;
+                this.player.play("jumpfallR");
+            }
         }
     }
 
@@ -105,16 +140,32 @@ export class Player {
                 this.player.setVelocityX(-180);
             } else if (this.cursors.right.isDown) {
                 this.player.setVelocityX(180);
+                if (!this.anime & this.player.body.velocity.y == 0) {
+                    this.player.play("playerRunR");
+                    this.anime = true;
+                }
             } else {
                 this.player.setVelocityX(0);
+                if (this.player.body.velocity.y == 0){
+                    this.player.play("idle");
+                    this.anime = false;
+                }
             }
         } else {
             if (this.cursors.left.isDown) {
                 this.player.setVelocityX(-75);
             } else if (this.cursors.right.isDown) {
                 this.player.setVelocityX(75);
+                if (!this.anime & this.player.body.velocity.y == 0) {
+                    this.player.play("playerWalkR");
+                    this.anime = true;
+                }
             } else {
                 this.player.setVelocityX(0);
+                if (this.player.body.velocity.y == 0){
+                    this.player.play("idle");
+                    this.anime = false;
+                }
             }
         }
     }

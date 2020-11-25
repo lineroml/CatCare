@@ -25,9 +25,7 @@ export class ScenaP extends Phaser.Scene {
 
         this.judge = new Judge(this, [10, 10], 100);
 
-        this.cats = [new Cat(this, 'yellow', 'YELLOW'),
-        new Cat(this, 'green', 'GREEN'),
-        new Cat(this, 'red', 'RED')];
+        this.cats = [new Cat(this, 'Peluche', 'YELLOW')];
         this.catStates = [];
 
     }
@@ -41,15 +39,15 @@ export class ScenaP extends Phaser.Scene {
 
         //Puestos de reabastecimiento
         this.shelter.create();
-        this.shelter.addShelter(200, 715, 'FOOD');
-        this.shelter.addShelter(600, 715, 'WATER');
-        this.shelter.addShelter(1000, 715, 'MED');
-        this.shelter.addShelter(1400, 715, 'FUN');
+        this.shelter.addShelter(200, bg.displayHeight-185/2-32, 'FOOD');
+        this.shelter.addShelter(600, bg.displayHeight-185/2-32, 'WATER');
+        this.shelter.addShelter(1000, bg.displayHeight-185/2-32, 'MED');
+        this.shelter.addShelter(1400, bg.displayHeight-185/2-32, 'FUN');
 
         //Creando plataformas
         this.plataforms.create();
         for (let i = 0; i < 7; i++) {
-            this.plataforms.addPlataform(540 * i, bg.displayHeight - 100, 'B')
+            this.plataforms.addPlataform(500 * i, bg.displayHeight - 32, 'S');
         }
 
 
