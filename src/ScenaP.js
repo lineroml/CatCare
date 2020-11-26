@@ -39,21 +39,25 @@ export class ScenaP extends Phaser.Scene {
 
         //Puestos de reabastecimiento
         this.shelter.create();
-        this.shelter.addShelter(200, bg.displayHeight-185/2-32, 'FOOD');
-        this.shelter.addShelter(600, bg.displayHeight-185/2-32, 'WATER');
-        this.shelter.addShelter(1000, bg.displayHeight-185/2-32, 'MED');
-        this.shelter.addShelter(1400, bg.displayHeight-185/2-32, 'FUN');
+        this.shelter.addShelter(bg.displayWidth-75, bg.displayHeight-185/2-32, 'FOOD');
+        this.shelter.addShelter(75, bg.displayHeight-185/2-32, 'WATER');
+        this.shelter.addShelter(75, 418-185/2, 'MED');
+        this.shelter.addShelter(bg.displayWidth-75, 418-185/2, 'FUN');
 
         //Creando plataformas
         this.plataforms.create();
         for (let i = 0; i < 7; i++) {
             this.plataforms.addPlataform(500 * i, bg.displayHeight - 32, 'S');
         }
+        this.plataforms.addPlataform(282,486,'SS');
+        this.plataforms.addPlataform(870,486,'SS');
+        this.plataforms.addPlataform(1151,418,'SS');
+        this.plataforms.addPlataform(0,418,'SS')
 
 
         //Platos de agua y comida
-        this.plates[0].put(750, 500);
-        this.plates[1].put(850, 500);
+        this.plates[0].put(bg.displayWidth/2-50, 600);
+        this.plates[1].put(bg.displayWidth/2+50, 600);
 
 
         //Creando Jugador

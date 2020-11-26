@@ -184,13 +184,11 @@ export class Player {
         } else {
             if (this.cursors.left.isDown) {
                 this.player.setVelocityX(-75);
-                console.log(this.animeL,this.animeR);
                 if (!this.animeL & !this.anime) {
                     this.player.play("playerWalkL");
                     this.animeL = true;
                 }
             } else if (this.cursors.right.isDown) {
-                console.log(this.animeL,this.animeR);
                 this.player.setVelocityX(75);
                 if (!this.animeR & !this.anime) {
                     this.player.play("playerWalkR");

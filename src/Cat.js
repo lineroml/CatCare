@@ -97,7 +97,7 @@ export class Cat {
                 y: y
             });
         }
-        this.cat = this.scene.physics.add.sprite(x, y, this.name);
+        this.cat = this.scene.physics.add.sprite(x, y, this.name,24);
         if (this.type != 'GREEN') {
             this.zone = this.scene.physics.add.image(x, y - 25, (this.type == 'RED') ? 'zoneRed' : 'zoneYellow')
             this.zone.body.allowGravity = false;

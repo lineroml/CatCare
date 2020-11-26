@@ -30,7 +30,6 @@ export class Judge {
 
     update() {
         if (this.finish) {
-            this.scene.menu.setVisible(true);
             if (this.scene.socket != undefined)
                 this.scene.socket.emit("ItEnded");
         }

@@ -52,7 +52,7 @@ export class MPtest extends Phaser.Scene {
 
         this.plates = [new Plate(this, 'FOOD', 0), new Plate(this, 'WATER', 1)];
 
-        this.cats = [new Cat(this, 'green', 'GREEN')];
+        this.cats = [new Cat(this, 'Charlotto', 'GREEN')];
         this.catStates = [];
 
         this.judge = new Judge(this, [5, 0], 100);
@@ -64,25 +64,34 @@ export class MPtest extends Phaser.Scene {
         this.physics.world.setBounds(0, 0, bg.displayWidth, bg.displayHeight);
         this.cameras.main.setBounds(0, 0, bg.displayWidth, bg.displayHeight);
 
+        //Puestos de reabastecimiento
         this.shelter.create();
-        this.shelter.addShelter(200, 715, 'FOOD');
-        this.shelter.addShelter(600, 715, 'WATER');
-        this.shelter.addShelter(1000, 715, 'MED');
-        this.shelter.addShelter(1400, 715, 'FUN');
+        this.shelter.addShelter(bg.displayWidth-75, bg.displayHeight-185/2-32, 'FOOD');
+        this.shelter.addShelter(75, bg.displayHeight-185/2-32, 'WATER');
+        this.shelter.addShelter(75, 418-185/2, 'MED');
+        this.shelter.addShelter(bg.displayWidth-75, 418-185/2, 'FUN');
 
+        //Creando plataformas
         this.plataforms.create();
         for (let i = 0; i < 7; i++) {
-            this.plataforms.addPlataform(540 * i, bg.displayHeight - 100, 'B')
+            this.plataforms.addPlataform(500 * i, bg.displayHeight - 32, 'S');
         }
+        this.plataforms.addPlataform(282,486,'SS');
+        this.plataforms.addPlataform(870,486,'SS');
+        this.plataforms.addPlataform(1151,418,'SS');
+        this.plataforms.addPlataform(0,418,'SS')
 
-        this.plates[0].put(750, 500);
-        this.plates[1].put(850, 500);
+
+        //Platos de agua y comida
+        this.plates[0].put(bg.displayWidth/2-50, 600);
+        this.plates[1].put(bg.displayWidth/2+50, 600);
 
         this.otherPlayers.init();
         this.player.create(this.plataforms.plat,bg);
 
         for (let i = 0; i < this.cats.length; i++) {
             var cat = this.cats[i];
+            console.log(cat.name);
             cat.create(bg);
         }
 

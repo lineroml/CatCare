@@ -15,10 +15,10 @@ export class Main extends Phaser.Scene {
             frameWidth: 80,
             frameHeight: 150
         });
-        this.load.image('logo')
+        this.load.image('logo','/resources/game/logo.png');
         this.load.image('elitxt','/resources/game/Entities/helpertxt.png');
 
-        this.load.image('multiP', '/resources/game/portal1.png');
+        this.load.image('keyBotton', '/resources/game/nekoKey.png');
 
         this.plataforms = new Ground(this);
 
@@ -32,11 +32,11 @@ export class Main extends Phaser.Scene {
         this.physics.world.setBounds(0, 0, bg.displayWidth, bg.displayHeight);
         this.cameras.main.setBounds(0, 0, bg.displayWidth, bg.displayHeight);
         //imagen de fondo y camara
-
+        this.add.image(bg.displayWidth/2,bg.displayHeight-400,'logo').setScale(0.3);
         //Creando plataformas
         this.plataforms.create();
         for (let i = 0; i < 7; i++) {
-            this.plataforms.addPlataform(500 * i, bg.displayHeight - 32, 'S')
+            this.plataforms.addPlataform(500 * i, bg.displayHeight - 32, 'S');
         }
         //Creando plataformas
 
@@ -52,7 +52,14 @@ export class Main extends Phaser.Scene {
         this.Eli = this.physics.add.sprite(bg.displayWidth/4,593,'Eli');
         this.Eli.play('eliStay');
 
-        this.mp = this.physics.add.image(bg.displayWidth*3/4,bg.displayHeight-200,'multiP').setScale(0.5);
+        this.key = this.physics.add.image(bg.displayWidth*3/4,bg.displayHeight-100,'keyBotton');
+        this.key.setImmovable();
+        this.add.text(bg.displayWidth*3/4-100,bg.displayHeight-190,'Vamos a ayudar a los demás\n               \\/',{
+            fontSize: '25px',
+            fill: '#301717',
+            fontFamily: 'pixel'
+        });
+        this.key.body.allowGravity = false;
         this.plates[0].put(bg.displayWidth/2,bg.displayHeight-100);
         this.plates[0].plate.setOrigin(1,1);
         this.plates[1].put(bg.displayWidth/2,bg.displayHeight-100);
@@ -62,7 +69,6 @@ export class Main extends Phaser.Scene {
         
         //Creando Jugador
         this.player.create(this.plataforms.plat,bg);
-
         //portales
 
 
@@ -70,14 +76,14 @@ export class Main extends Phaser.Scene {
 
         
         this.physics.add.collider(this.plataforms.plat, this.Eli);
-        this.physics.add.collider(this.plataforms.plat, this.mp);
+        this.physics.add.collider(this.plataforms.plat, this.key);
 
         this.physics.add.overlap(this.player.player,this.Eli,()=>{
             this.scene.stop();
             this.scene.start("test");
         },()=>{return this.player.eKey.isDown;},this);
 
-        this.physics.add.overlap(this.player.player,this.mp,()=>{
+        this.physics.add.overlap(this.player.player,this.key,()=>{
             this.scene.stop();
             this.scene.start("ServerCreator")
         },()=>{return this.player.eKey.isDown;},this);
@@ -91,6 +97,5 @@ export class Main extends Phaser.Scene {
         this.player.update();
         this.cats[0].update();
         this.cats[1].update();
-        console.log(this.Eli.y)
     }
 }
