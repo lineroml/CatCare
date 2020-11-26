@@ -46,45 +46,45 @@ export class Cat {
 
     create(bg) {
         this.scene.anims.create({
-            key: this.name+"RunR",
-            frames: this.scene.anims.generateFrameNumbers("player", { start: 0, end: 3 }),
-            frameRate: 8,
+            key: this.name + "RunR",
+            frames: this.scene.anims.generateFrameNumbers(this.name, { start: 0, end: 3 }),
+            frameRate: 4,
             repeat: -1
         });
         this.scene.anims.create({
-            key: this.name+"RunL",
-            frames: this.scene.anims.generateFrameNumbers("player", { start: 4, end: 7 }),
-            frameRate: 8,
+            key: this.name + "RunL",
+            frames: this.scene.anims.generateFrameNumbers(this.name, { start: 4, end: 7 }),
+            frameRate: 4,
             repeat: -1
         });
         this.scene.anims.create({
-            key: this.name+"MadR",
-            frames: this.scene.anims.generateFrameNumbers("player", { start: 8, end: 10 }),
-            frameRate: 8,
+            key: this.name + "MadR",
+            frames: this.scene.anims.generateFrameNumbers(this.name, { start: 8, end: 10 }),
+            frameRate: 3,
             repeat: -1
         });
         this.scene.anims.create({
-            key: this.name+"MadL",
-            frames: this.scene.anims.generateFrameNumbers("player", { start: 12, end: 14 }),
-            frameRate: 8,
+            key: this.name + "MadL",
+            frames: this.scene.anims.generateFrameNumbers(this.name, { start: 12, end: 14 }),
+            frameRate: 3,
             repeat: -1
         });
         this.scene.anims.create({
-            key: this.name+"standR",
-            frames: this.scene.anims.generateFrameNumbers("player", { start: 16, end: 18 }),
-            frameRate: 8,
+            key: this.name + "standR",
+            frames: this.scene.anims.generateFrameNumbers(this.name, { start: 16, end: 18 }),
+            frameRate: 3,
             repeat: -1
         });
         this.scene.anims.create({
-            key: this.name+"standL",
-            frames: this.scene.anims.generateFrameNumbers("player", { start: 20, end: 22 }),
-            frameRate: 8,
+            key: this.name + "standL",
+            frames: this.scene.anims.generateFrameNumbers(this.name, { start: 20, end: 22 }),
+            frameRate: 3,
             repeat: -1
         });
         this.scene.anims.create({
-            key: this.name+"Sleep",
-            frames: this.scene.anims.generateFrameNumbers("player", { start: 24, end: 26 }),
-            frameRate: 8,
+            key: this.name + "Sleep",
+            frames: this.scene.anims.generateFrameNumbers(this.name, { start: 24, end: 26 }),
+            frameRate: 2,
             repeat: -1
         });
         var x = Phaser.Math.Between(100, bg.displayWidth - 150);
@@ -97,7 +97,7 @@ export class Cat {
                 y: y
             });
         }
-        this.cat = this.scene.physics.add.image(x, y, this.name);
+        this.cat = this.scene.physics.add.sprite(x, y, this.name);
         if (this.type != 'GREEN') {
             this.zone = this.scene.physics.add.image(x, y - 25, (this.type == 'RED') ? 'zoneRed' : 'zoneYellow')
             this.zone.body.allowGravity = false;
@@ -146,6 +146,7 @@ export class Cat {
                     ((this.state == 'HUNGRY' & p.type == 'FOOD') |
                         (this.state == 'THIRSTY' & p.type == 'WATER'))) {
                     p.use();
+                    this.cat.play(this.name+"Sleep");
                     cat.setVelocityX(0);
                     this.state = 'NORMAL';
                 }
@@ -168,10 +169,10 @@ export class Cat {
             this.zone.y = this.cat.y - 25
         }
 
-        if (this.textName.x != this.cat.x - 20)
-            this.textName.x = this.cat.x - 20;
-        if (this.textName.y != this.cat.y - this.cat.displayHeight / 2 - 21)
-            this.textName.y = this.cat.y - this.cat.displayHeight / 2 - 21;
+        if (this.textName.x != this.cat.x - this.cat.displayWidth/2)
+            this.textName.x = this.cat.x - this.cat.displayWidth/2;
+        if (this.textName.y != this.cat.y - this.cat.displayHeight / 2 - 30)
+            this.textName.y = this.cat.y - this.cat.displayHeight / 2 - 30;
 
 
     }
@@ -179,7 +180,7 @@ export class Cat {
     move() {
         if (this.state != 'HUNGRY' & this.state != 'THIRSTY') {
             var choose = Phaser.Math.Between(0, 1);
-            this.cat.play(this.name+(choose == 1)? "RunR":"RunL");
+            this.cat.play((this.name + ((choose == 1) ? "RunR" : "RunL")));
             switch (this.type) {
                 case 'GREEN':
                     this.cat.setVelocityX((choose == 1) ? 200 : -200);
@@ -191,10 +192,6 @@ export class Cat {
                             }
                         }, [], this);
                     }
-
-                    this.scene.time.delayedCall(1200, () => {
-                        this.cat.setVelocity(0);
-                    }, [], this);
                     break;
                 case 'YELLOW':
                     this.cat.setVelocityX((choose == 1) ? 200 : -200);
@@ -206,10 +203,6 @@ export class Cat {
                             }
                         }, [], this);
                     }
-
-                    this.scene.time.delayedCall(1200, () => {
-                        if (!this.action) this.cat.setVelocity(0);
-                    }, [], this);
                     break;
                 case 'RED':
                     this.cat.setVelocityX((choose == 1) ? 200 : -200);
@@ -221,25 +214,24 @@ export class Cat {
                             }
                         }, [], this);
                     }
-
-                    this.scene.time.delayedCall(1200, () => {
-                        if (!this.action) {
-                            this.cat.setVelocity(0);
-                            if(choose == 1){
-                                var quieto = this.name+(Phaser.Math.Between(0,1) == 1)?"standR":"Sleep";
-                            }else{
-                                var quieto = this.name+(Phaser.Math.Between(0,1) == 1)?"standL":"Sleep";
-                            }
-                            this.cat.play(quieto);
-                        }
-                    }, [], this);
                     break;
             }
-
+            this.scene.time.delayedCall(1200, () => {
+                if (!this.action) {
+                    this.cat.setVelocity(0);
+                    if (choose == 1) {
+                        var quieto = this.name + ((Phaser.Math.Between(0, 1) == 1) ? "standR" : "Sleep");
+                    } else {
+                        var quieto = this.name + ((Phaser.Math.Between(0, 1) == 1) ? "standL" : "Sleep");
+                    }
+                    this.cat.play(quieto);
+                }
+            }, [], this);
             this.moveTimer.delay = Phaser.Math.Between(3000, 6000);
         } else {
             var t = (this.state == 'HUNGRY') ? 'FOOD' : 'WATER';
             this.cat.setVelocityX((this.plateCoord[t].x > this.cat.x) ? 200 : -200);
+            this.cat.play((this.name + ((this.plateCoord[t].x > this.cat.x) ? "RunR" : "RunL")));
             this.moveTimer.delay = Phaser.Math.Between(3000, 6000);
         }
     }
@@ -273,6 +265,8 @@ export class Cat {
         var xVel = player.body.velocity.x;
         if (xVel > 80 | xVel < -80) {
             if (this.type == 'YELLOW' & this.state != 'HUNGRY' & this.state != 'THIRSTY') {
+                if (!this.action)
+                    this.cat.play(this.name + ((xVel > 80) ? "MadL" : "MadR"));
                 this.action = true;
                 if (this.scene.socket != undefined)
                     this.scene.socket.emit("playerApproachCat", { name: this.name, playerX: player.x, zoneX: zone.x });

@@ -79,7 +79,7 @@ export class MPtest extends Phaser.Scene {
         this.plates[1].put(850, 500);
 
         this.otherPlayers.init();
-        this.player.create(this.plataforms.plat);
+        this.player.create(this.plataforms.plat,bg);
 
         for (let i = 0; i < this.cats.length; i++) {
             var cat = this.cats[i];

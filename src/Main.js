@@ -1,5 +1,7 @@
 import { Player } from '/Player.js';
 import{ Ground } from '/Ground.js';
+import { Cat } from './Cat.js';
+import { Plate } from './Plate.js';
 
 export class Main extends Phaser.Scene {
     constructor() {
@@ -9,13 +11,20 @@ export class Main extends Phaser.Scene {
     preload() {
         console.log('estoy en main');
         this.load.image('bg', '/resources/game/BackGround/bg.png');
+        this.load.spritesheet('Eli', '/resources/game/Entities/helper.png', {
+            frameWidth: 80,
+            frameHeight: 150
+        });
+        this.load.image('logo')
+        this.load.image('elitxt','/resources/game/Entities/helpertxt.png');
 
         this.load.image('multiP', '/resources/game/portal1.png');
-        this.load.image('singleP', '/resources/game/portal2.png');
 
         this.plataforms = new Ground(this);
 
         this.player = new Player(this);
+        this.cats = [new Cat(this,'Charlotto','GREEN'), new Cat(this,'Lion','GREEN')];
+        this.plates = [new Plate(this,'WATER',0), new Plate(this,'FOOD',1)];
     }
     create() {
         //imagen de fondo y camara
@@ -31,24 +40,39 @@ export class Main extends Phaser.Scene {
         }
         //Creando plataformas
 
+        this.anims.create({
+            key: "eliStay",
+            frames: this.anims.generateFrameNumbers("Eli", { start: 0, end: 2 }),
+            frameRate: 1.5,
+            repeat: -1
+        });
+        this.txt = this.add.image(bg.displayWidth/4-25,bg.displayHeight-270, 'elitxt');
+        this.txt.setScale(0.6);
+        this.txt.setOrigin(0.1,0.1);
+        this.Eli = this.physics.add.sprite(bg.displayWidth/4,593,'Eli');
+        this.Eli.play('eliStay');
+
+        this.mp = this.physics.add.image(bg.displayWidth*3/4,bg.displayHeight-200,'multiP').setScale(0.5);
+        this.plates[0].put(bg.displayWidth/2,bg.displayHeight-100);
+        this.plates[0].plate.setOrigin(1,1);
+        this.plates[1].put(bg.displayWidth/2,bg.displayHeight-100);
+        this.plates[1].plate.setOrigin(0,1);
+        this.cats[0].create(bg);
+        this.cats[1].create(bg);
+        
         //Creando Jugador
-        this.player.create(this.plataforms.plat);
+        this.player.create(this.plataforms.plat,bg);
 
         //portales
 
 
-        this.sp = this.physics.add.image(100,400,'singleP').setScale(0.5);
-
-
-
-
-        this.mp = this.physics.add.image(500,400,'multiP').setScale(0.5);
+        
 
         
-        this.physics.add.collider(this.plataforms.plat, this.sp);
+        this.physics.add.collider(this.plataforms.plat, this.Eli);
         this.physics.add.collider(this.plataforms.plat, this.mp);
 
-        this.physics.add.overlap(this.player.player,this.sp,()=>{
+        this.physics.add.overlap(this.player.player,this.Eli,()=>{
             this.scene.stop();
             this.scene.start("test");
         },()=>{return this.player.eKey.isDown;},this);
@@ -65,5 +89,8 @@ export class Main extends Phaser.Scene {
     }
     update() {
         this.player.update();
+        this.cats[0].update();
+        this.cats[1].update();
+        console.log(this.Eli.y)
     }
 }

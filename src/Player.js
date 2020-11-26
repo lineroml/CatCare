@@ -15,12 +15,22 @@ export class Player {
         this.pKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P);
         this.tool = new Tool(this.scene);
         this.anime = false;
+        this.animeR = false;
+        this.animeL = false;
+        this.jumping = false;
+        this.walking = false;
     }
 
-    create(plat) {
+    create(plat, bg) {
         this.scene.anims.create({
             key: "playerRunR",
             frames: this.scene.anims.generateFrameNumbers("player", { start: 4, end: 7 }),
+            frameRate: 8,
+            repeat: -1
+        });
+        this.scene.anims.create({
+            key: "playerRunL",
+            frames: this.scene.anims.generateFrameNumbers("player", { start: 16, end: 19 }),
             frameRate: 8,
             repeat: -1
         });
@@ -37,15 +47,27 @@ export class Player {
             repeat: 0
         });
         this.scene.anims.create({
+            key: "jumpfallL",
+            frames: this.scene.anims.generateFrameNumbers("player", { start: 21, end: 23 }),
+            frameRate: 1,
+            repeat: 0
+        });
+        this.scene.anims.create({
             key: "playerWalkR",
             frames: this.scene.anims.generateFrameNumbers("player", { start: 12, end: 15 }),
             frameRate: 5,
             repeat: -1
         });
-        
+        this.scene.anims.create({
+            key: "playerWalkL",
+            frames: this.scene.anims.generateFrameNumbers("player", { start: 24, end: 27 }),
+            frameRate: 5,
+            repeat: -1
+        });
+
 
         this.paused = false;
-        this.player = this.scene.physics.add.sprite(26, Phaser.Math.Between(300, 600), 'player', 0);
+        this.player = this.scene.physics.add.sprite(bg.displayWidth / 2, bg.displayHeight / 2, 'player', 0);
         this.player.setCollideWorldBounds(true);
 
 
@@ -65,13 +87,7 @@ export class Player {
             }
         }
 
-
-        this.text = this.scene.add.text(this.player.x, this.player.y / 4, this.tool.selectedTool, {
-            fontSize: '30px',
-            fill: '#111',
-            fontFamily: 'pixel'
-        });
-
+        this.tool.create();
     }
 
     getTool() {
@@ -97,6 +113,14 @@ export class Player {
     update() {
         this.move();
 
+        if (this.anime & this.jumping) {
+            this.jumping = false;
+            if (this.player.body.velocity.x != 0)
+                this.player.play((this.player.body.velocity.x < 0) ? 'jumpfallL' : 'jumpfallR');
+            else
+                this.player.play('idle');
+        }
+
         if (this.dKey.isDown) {
             this.tool.dropTool();
         }
@@ -116,20 +140,19 @@ export class Player {
             this.scene.scene.launch('PlayersInfo', { playerList: this.scene.playerList, ID: this.scene.socket.id })
         }
 
-
-        this.text.setText(this.tool.selectedTool);
-        this.text.x = this.player.x - 20;
-        this.text.y = this.player.y - this.player.displayHeight / 2 - 21;
     }
 
     jump() {
+        if (this.anime) {
+            this.anime = false;
+            this.jumping = true;
+            this.animeR = false;
+            this.animeL = false;
+        }
         if (this.cursors.up.isDown) {
             this.player.setVelocityY(-250);//puede saltar 100px
-            console.log(this.player.body);
-            if ((this.player.body.velocity.x!= 0 | !this.anime)) {
-                this.anime = true;
-                this.player.play("jumpfallR");
-            }
+            this.anime = true;
+            this, this.jumping = true;
         }
     }
 
@@ -137,34 +160,48 @@ export class Player {
     move() {
         if (this.cursors.down.isUp) {
             if (this.cursors.left.isDown) {
+                this.animeR = false;
                 this.player.setVelocityX(-180);
+                if (!this.animeL & !this.anime) {
+                    this.player.play("playerRunL");
+                    this.animeL = true;
+                }
             } else if (this.cursors.right.isDown) {
+                this.animeL = false;
                 this.player.setVelocityX(180);
-                if (!this.anime & this.player.body.velocity.y == 0) {
+                if (!this.animeR & !this.anime) {
                     this.player.play("playerRunR");
-                    this.anime = true;
+                    this.animeR = true;
                 }
             } else {
                 this.player.setVelocityX(0);
-                if (this.player.body.velocity.y == 0){
+                if (!this.anime) {
                     this.player.play("idle");
-                    this.anime = false;
+                    this.animeL = false;
+                    this.animeR = false;
                 }
             }
         } else {
             if (this.cursors.left.isDown) {
                 this.player.setVelocityX(-75);
+                console.log(this.animeL,this.animeR);
+                if (!this.animeL & !this.anime) {
+                    this.player.play("playerWalkL");
+                    this.animeL = true;
+                }
             } else if (this.cursors.right.isDown) {
+                console.log(this.animeL,this.animeR);
                 this.player.setVelocityX(75);
-                if (!this.anime & this.player.body.velocity.y == 0) {
+                if (!this.animeR & !this.anime) {
                     this.player.play("playerWalkR");
-                    this.anime = true;
+                    this.animeR = true;
                 }
             } else {
                 this.player.setVelocityX(0);
-                if (this.player.body.velocity.y == 0){
+                if (!this.anime) {
                     this.player.play("idle");
-                    this.anime = false;
+                    this.animeL = false;
+                    this.animeR = false;
                 }
             }
         }
@@ -173,7 +210,7 @@ export class Player {
     toolAndPlate(plate, _) {
         var tempPlate = this.selectedPlate(plate);
         if (this.tool.selectedTool == tempPlate.type) {
-            if (tempPlate.fill()) this.tool.selectedTool = undefined;
+            if (tempPlate.fill()) this.dropTool();
             if (this.scene.socket != undefined) this.scene.socket.emit('changePlate');
         }
 

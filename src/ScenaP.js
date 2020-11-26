@@ -57,7 +57,7 @@ export class ScenaP extends Phaser.Scene {
 
 
         //Creando Jugador
-        this.player.create(this.plataforms.plat);
+        this.player.create(this.plataforms.plat,bg);
 
 
         for (let i = 0; i < this.cats.length; i++) {
