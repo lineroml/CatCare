@@ -3,6 +3,14 @@
 
 <head>
     <link rel="stylesheet" href="style.css">
+    <style media='screen' type='text/css'>
+        @font-face {
+          font-family: pixel;
+          src: url('./resources/game/PIXELADE.TTF');
+          font-weight:400;
+          font-weight:normal;
+        }
+    </style>
 </head>
 
 <body>
@@ -17,7 +25,7 @@
             <div class='full-input'>
                 <form>
                     <label for="nombre">Ingresa tu nombre:</label><br>
-                    <input type="text" id="fname" name="fname"><br>
+                    <input type="text" id="fname" name="fname" placeholder="Pon tu nombre para continuar!"><br>
                 </form>
             </div>
             <input type="button" id="play" class="boton"/>
@@ -26,10 +34,11 @@
 
     <div class="footer">
         <ul>
+            <li> En colaboración de FeliNorte ---</li>
             <li>Luisa Escobar</li>
             <li>Shalem Janna</li>
-            <li>Enrique Miranda</a></li>
-            <li>Universidad del Norte</a></li>
+            <li>Enrique Miranda</li>
+            <li>Universidad del Norte</li>
         </ul>
     </div>
 
@@ -40,8 +49,10 @@
 <script>
     function onclick(){
         const name = document.getElementById("fname").value;
-        localStorage.setItem("name",name);
-        location.href='Main.html';
+        if(name != ""){
+            localStorage.setItem("name",name);
+            location.href='Main.html';
+        } 
     }
     document.getElementById("play").addEventListener("click", onclick);
 </script>

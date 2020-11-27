@@ -1,11 +1,13 @@
-/*Aquí cambiamos el fondo de toda la pantalla inicial*/
+/*Aquí cambiamos el fondo de toda la pantalla inicial y fondo del juego*/
 body {
     height: 100%;
     margin: 0;
     background-color: #FFCBDD;
 }
 
-
+/* Apartado principal, comprende izquierda y derecha, siendo:
+Izquierda - Apartado de logo.
+Derecha - Apartado de login */
 .princ{
     display: flex;
     flex-direction: row;
@@ -13,6 +15,7 @@ body {
     align-items: center;
 }
 
+/*Estilo de la imagen del logo*/
 .logo img{
     padding: 70px 0;
     display: block;
@@ -20,12 +23,17 @@ body {
     height: auto;
 }
 
+/* Apartado de login, comprende:
+- Header con gato y "Apresurate (...)"
+- Formulario para insertar nombre
+- Botón para iniciar juego */
 .login{
     height: 100%;
     width: 40%;
     
 }
 
+/* Comprende el estilo del formulario completo, así como el fondo del label y del form mismo. */
 .full-input{
     display: inline-block;
     margin-left: 40%;
@@ -42,15 +50,17 @@ body {
     background-color:#A1CDF4; 
 }
 
+/*Cambia la fuente (color, tamaño y familia, del )*/
 .full-input form label{
     padding-left:15px;
-    font: 24px system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Ubuntu,"Helvetica Neue",sans-serif;
+    font: 24px pixel;
     color:#1A1A1A;
 }
 
+/*Cambia estilo de fuente del input del form */
 .full-input form input{ 
     width: 300px;
-    font: 16px system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Ubuntu,"Helvetica Neue",sans-serif;
+    font: 19px pixel;
     margin: 5px;
     border: none;
     background-color:#A1CDF4;
@@ -58,31 +68,36 @@ body {
     outline: none;
 } 
 
+/*Cuando se le de focus al input, para cambiar el color de la barra de abajo*/
 .full-input:focus-within{
     border-bottom: 3px solid #7C0B2B;
 }
 
+/*Estilo del footer de la página*/
 .footer ul{ 
     display: flex;
     flex-direction: row;
     justify-content: center;
-    font: 15px system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Ubuntu,"Helvetica Neue",sans-serif;
+    font: 20px pixel;
     color:#7C0B2B;
     padding-right:30px;
     text-decoration: none;
 }
 
+/*Estilo de la lista de items del footer*/
 ul {
     list-style-type: none; 
 }
-
 li{
     padding-right:16px;
 }
+
+/*Estilo del header del login*/
 .meow img{
     margin-left: 20%;
 }
 
+/*Estilo del botón para continuar "Go Play"*/
 input.boton {
     width: 152px;
     margin-top: 20px;
@@ -94,6 +109,7 @@ input.boton {
     outline: none;
 }
 
+/*Estilo del botón "Go Play" cuando el cursor está sobre el*/
 input.boton:hover{
     width: 152px;
     height: 58px;
