@@ -81,3 +81,23 @@ li{
 .meow img{
     margin-left: 20%;
 }
+
+input.boton {
+    width: 152px;
+    margin-top: 20px;
+    margin-left: 500px;
+    height: 58px;
+    background: url(../src/resources/botonsinhover.png) no-repeat;
+    cursor:pointer;
+    border: none;
+    outline: none;
+}
+
+input.boton:hover{
+    width: 152px;
+    height: 58px;
+    background: url(../src/resources/botonconhover.png) no-repeat;
+    cursor:pointer;
+    border: none;
+    outline: none;
+}
