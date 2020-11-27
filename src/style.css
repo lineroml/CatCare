@@ -87,7 +87,7 @@ input.boton {
     margin-top: 20px;
     margin-left: 500px;
     height: 58px;
-    background: url(../src/resources/botonsinhover.png) no-repeat;
+    background: url(/resources/botonsinhover.png) no-repeat;
     cursor:pointer;
     border: none;
     outline: none;
@@ -96,7 +96,7 @@ input.boton {
 input.boton:hover{
     width: 152px;
     height: 58px;
-    background: url(../src/resources/botonconhover.png) no-repeat;
+    background: url(/resources/botonconhover.png) no-repeat;
     cursor:pointer;
     border: none;
     outline: none;

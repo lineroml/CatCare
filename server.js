@@ -86,8 +86,15 @@ io.on("connection", (socket) => {
     var player = this.players[data.ID];
     player.x = data.x;
     player.y = data.y;
-    player.tool = data.tool;
   });
+
+  socket.on("playingAnimation",(data)=>{
+    var player = this.players[socket.id];
+    if(player.animation != data){
+    player.animation = data;
+    socket.broadcast.emit("updateAnim",{ID: socket.id, anim: player.animation});
+    }
+  })
 
   socket.on("updatePoints", (data) => {
     var player = this.players[data.ID];

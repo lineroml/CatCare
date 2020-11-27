@@ -115,10 +115,17 @@ export class Player {
 
         if (this.anime & this.jumping) {
             this.jumping = false;
-            if (this.player.body.velocity.x != 0)
-                this.player.play((this.player.body.velocity.x < 0) ? 'jumpfallL' : 'jumpfallR');
-            else
+            if (this.player.body.velocity.x != 0) {
+                var anim = (this.player.body.velocity.x < 0) ? 'jumpfallL' : 'jumpfallR';
+                this.player.play(anim);
+                if (this.scene.socket != undefined)
+                    this.scene.socket.emit("playingAnimation", anim);
+            }
+            else {
                 this.player.play('idle');
+                if (this.scene.socket != undefined)
+                    this.scene.socket.emit("playingAnimation", 'idle');
+            }
         }
 
         if (this.dKey.isDown) {
@@ -158,12 +165,14 @@ export class Player {
 
 
     move() {
+        var anim = 'papapapapapa';
         if (this.cursors.down.isUp) {
             if (this.cursors.left.isDown) {
                 this.animeR = false;
                 this.player.setVelocityX(-180);
                 if (!this.animeL & !this.anime) {
                     this.player.play("playerRunL");
+                    anim = 'playerRunL';
                     this.animeL = true;
                 }
             } else if (this.cursors.right.isDown) {
@@ -171,12 +180,14 @@ export class Player {
                 this.player.setVelocityX(180);
                 if (!this.animeR & !this.anime) {
                     this.player.play("playerRunR");
+                    anim = 'playerRunR';
                     this.animeR = true;
                 }
             } else {
                 this.player.setVelocityX(0);
                 if (!this.anime) {
                     this.player.play("idle");
+                    anim = 'idle';
                     this.animeL = false;
                     this.animeR = false;
                 }
@@ -186,23 +197,28 @@ export class Player {
                 this.player.setVelocityX(-75);
                 if (!this.animeL & !this.anime) {
                     this.player.play("playerWalkL");
+                    anim = 'playerWalkL';
                     this.animeL = true;
                 }
             } else if (this.cursors.right.isDown) {
                 this.player.setVelocityX(75);
                 if (!this.animeR & !this.anime) {
                     this.player.play("playerWalkR");
+                    anim = 'playerWalkR';
                     this.animeR = true;
                 }
             } else {
                 this.player.setVelocityX(0);
                 if (!this.anime) {
                     this.player.play("idle");
+                    anim = 'idle';
                     this.animeL = false;
                     this.animeR = false;
                 }
             }
         }
+        if (this.scene.socket != undefined)
+            this.scene.socket.emit("playingAnimation", anim);
     }
 
     toolAndPlate(plate, _) {

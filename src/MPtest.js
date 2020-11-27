@@ -107,8 +107,7 @@ export class MPtest extends Phaser.Scene {
         this.socket.emit("UpdatePlayer", {
             ID: this.socket.id,
             x: this.player.getX(),
-            y: this.player.getY(),
-            tool: this.player.getTool()
+            y: this.player.getY()
         });
         this.catUpdate();
         this.judge.update();
