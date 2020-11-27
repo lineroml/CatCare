@@ -165,14 +165,14 @@ export class Player {
 
 
     move() {
-        var anim = 'papapapapapa';
         if (this.cursors.down.isUp) {
             if (this.cursors.left.isDown) {
                 this.animeR = false;
                 this.player.setVelocityX(-180);
                 if (!this.animeL & !this.anime) {
                     this.player.play("playerRunL");
-                    anim = 'playerRunL';
+                    if (this.scene.socket != undefined)
+                        this.scene.socket.emit("playingAnimation", 'playerRunL');
                     this.animeL = true;
                 }
             } else if (this.cursors.right.isDown) {
@@ -180,14 +180,16 @@ export class Player {
                 this.player.setVelocityX(180);
                 if (!this.animeR & !this.anime) {
                     this.player.play("playerRunR");
-                    anim = 'playerRunR';
+                    if (this.scene.socket != undefined)
+                        this.scene.socket.emit("playingAnimation", 'playerRunR');
                     this.animeR = true;
                 }
             } else {
                 this.player.setVelocityX(0);
                 if (!this.anime) {
                     this.player.play("idle");
-                    anim = 'idle';
+                    if (this.scene.socket != undefined)
+                        this.scene.socket.emit("playingAnimation", 'idle');
                     this.animeL = false;
                     this.animeR = false;
                 }
@@ -197,28 +199,29 @@ export class Player {
                 this.player.setVelocityX(-75);
                 if (!this.animeL & !this.anime) {
                     this.player.play("playerWalkL");
-                    anim = 'playerWalkL';
+                    if (this.scene.socket != undefined)
+                        this.scene.socket.emit("playingAnimation", 'playerWalkL');
                     this.animeL = true;
                 }
             } else if (this.cursors.right.isDown) {
                 this.player.setVelocityX(75);
                 if (!this.animeR & !this.anime) {
                     this.player.play("playerWalkR");
-                    anim = 'playerWalkR';
+                    if (this.scene.socket != undefined)
+                        this.scene.socket.emit("playingAnimation", 'playerWalkR');
                     this.animeR = true;
                 }
             } else {
                 this.player.setVelocityX(0);
                 if (!this.anime) {
                     this.player.play("idle");
-                    anim = 'idle';
+                    if (this.scene.socket != undefined)
+                        this.scene.socket.emit("playingAnimation", 'idle');
                     this.animeL = false;
                     this.animeR = false;
                 }
             }
         }
-        if (this.scene.socket != undefined)
-            this.scene.socket.emit("playingAnimation", anim);
     }
 
     toolAndPlate(plate, _) {

@@ -124,6 +124,14 @@ export class MPtest extends Phaser.Scene {
             console.log(this.plates)
         });
 
+        this.socket.on("animateCat", (data)=>{
+            var i = 0;
+            while(this.cats[i].name != data.name){
+                i++;
+            }
+            this.cats[i].cat.play(data.animation);
+        });
+
         this.socket.on("update", data => {
             var players = data.players;
             Object.keys(players).forEach(id => {

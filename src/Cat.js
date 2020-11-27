@@ -97,7 +97,7 @@ export class Cat {
                 y: y
             });
         }
-        this.cat = this.scene.physics.add.sprite(x, y, this.name,24);
+        this.cat = this.scene.physics.add.sprite(x, y, this.name, 24);
         if (this.type != 'GREEN') {
             this.zone = this.scene.physics.add.image(x, y - 25, (this.type == 'RED') ? 'zoneRed' : 'zoneYellow')
             this.zone.body.allowGravity = false;
@@ -146,7 +146,9 @@ export class Cat {
                     ((this.state == 'HUNGRY' & p.type == 'FOOD') |
                         (this.state == 'THIRSTY' & p.type == 'WATER'))) {
                     p.use();
-                    this.cat.play(this.name+"Sleep");
+                    this.cat.play(this.name + "Sleep");
+                    if (this.scene.socket != undefined)
+                        this.scene.socket.emit('catAnim', { name: this.name, animation: (this.name + "Sleep") })
                     cat.setVelocityX(0);
                     this.state = 'NORMAL';
                 }
@@ -169,8 +171,8 @@ export class Cat {
             this.zone.y = this.cat.y - 25
         }
 
-        if (this.textName.x != this.cat.x - this.cat.displayWidth/2)
-            this.textName.x = this.cat.x - this.cat.displayWidth/2;
+        if (this.textName.x != this.cat.x - this.cat.displayWidth / 2)
+            this.textName.x = this.cat.x - this.cat.displayWidth / 2;
         if (this.textName.y != this.cat.y - this.cat.displayHeight / 2 - 30)
             this.textName.y = this.cat.y - this.cat.displayHeight / 2 - 30;
 
@@ -181,6 +183,8 @@ export class Cat {
         if (this.state != 'HUNGRY' & this.state != 'THIRSTY') {
             var choose = Phaser.Math.Between(0, 1);
             this.cat.play((this.name + ((choose == 1) ? "RunR" : "RunL")));
+            if (this.scene.socket != undefined)
+                this.scene.socket.emit('catAnim', { name: this.name, animation: (this.name + ((choose == 1) ? "RunR" : "RunL")) })
             switch (this.type) {
                 case 'GREEN':
                     this.cat.setVelocityX((choose == 1) ? 200 : -200);
@@ -225,6 +229,8 @@ export class Cat {
                         var quieto = this.name + ((Phaser.Math.Between(0, 1) == 1) ? "standL" : "Sleep");
                     }
                     this.cat.play(quieto);
+                    if (this.scene.socket != undefined)
+                        this.scene.socket.emit('catAnim', { name: this.name, animation: quieto })
                 }
             }, [], this);
             this.moveTimer.delay = Phaser.Math.Between(3000, 6000);
@@ -232,6 +238,8 @@ export class Cat {
             var t = (this.state == 'HUNGRY') ? 'FOOD' : 'WATER';
             this.cat.setVelocityX((this.plateCoord[t].x > this.cat.x) ? 200 : -200);
             this.cat.play((this.name + ((this.plateCoord[t].x > this.cat.x) ? "RunR" : "RunL")));
+            if (this.scene.socket != undefined)
+                this.scene.socket.emit('catAnim', { name: this.name, animation: (this.name + ((this.plateCoord[t].x > this.cat.x) ? "RunR" : "RunL")) })
             this.moveTimer.delay = Phaser.Math.Between(3000, 6000);
         }
     }
@@ -265,8 +273,11 @@ export class Cat {
         var xVel = player.body.velocity.x;
         if (xVel > 80 | xVel < -80) {
             if (this.type == 'YELLOW' & this.state != 'HUNGRY' & this.state != 'THIRSTY') {
-                if (!this.action)
+                if (!this.action) {
                     this.cat.play(this.name + ((xVel > 80) ? "MadL" : "MadR"));
+                    if (this.scene.socket != undefined)
+                        this.scene.socket.emit('catAnim', { name: this.name, animation: (this.name + ((xVel > 80) ? "MadL" : "MadR")) })
+                }
                 this.action = true;
                 if (this.scene.socket != undefined)
                     this.scene.socket.emit("playerApproachCat", { name: this.name, playerX: player.x, zoneX: zone.x });
@@ -277,6 +288,15 @@ export class Cat {
                 }, [], this);
             } else if (this.type == 'RED') {
                 this.scene.judge.restPoints(1);
+                if (!this.action) {
+                    this.cat.play(this.name + ((xVel > 80) ? "MadL" : "MadR"));
+                    if (this.scene.socket != undefined)
+                        this.scene.socket.emit('catAnim', { name: this.name, animation: (this.name + ((xVel > 80) ? "MadL" : "MadR")) })
+                }
+                this.action = true;
+                this.scene.time.delayedCall(1000, () => {
+                    this.action = false;
+                }, [], this);
             }
         }
     }

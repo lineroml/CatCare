@@ -29,7 +29,7 @@ io.on("connection", (socket) => {
   var socketid = socket.id;
   if (numPlayers == 1) this.primeControler = socket.id;
 
-  socket.emit("actualPlayers", {players: this.players});
+  socket.emit("actualPlayers", { players: this.players });
   console.log("Alguien se ha conectado", socketid);
   this.players[socketid] = {
     ID: socketid,
@@ -41,7 +41,7 @@ io.on("connection", (socket) => {
     animation: 'idle'
   };
 
-  socket.on("setName", name =>{
+  socket.on("setName", name => {
     this.players[socket.id].name = name;
     socket.broadcast.emit("newPlayer", this.players[socketid]);
   })
@@ -58,8 +58,8 @@ io.on("connection", (socket) => {
       socket.broadcast.emit("mindlessCat");
     }
   });
-  socket.on("tellME", ()=>{
-    socket.emit("actualPlayers", {players: this.players});
+  socket.on("tellME", () => {
+    socket.emit("actualPlayers", { players: this.players });
   })
 
   socket.on("catUpdate", (data) => {
@@ -67,6 +67,10 @@ io.on("connection", (socket) => {
     cat.x = data.x;
     cat.y = data.y;
     cat.state = data.state;
+  });
+
+  socket.on("catAnim",(data)=>{
+    socket.broadcast.emit("animateCat",data);
   });
 
   socket.on("catPos", (data) => {
@@ -88,11 +92,11 @@ io.on("connection", (socket) => {
     player.y = data.y;
   });
 
-  socket.on("playingAnimation",(data)=>{
+  socket.on("playingAnimation", (data) => {
     var player = this.players[socket.id];
-    if(player.animation != data){
-    player.animation = data;
-    socket.broadcast.emit("updateAnim",{ID: socket.id, anim: player.animation});
+    if (player.animation != data) {
+      player.animation = data;
+      socket.broadcast.emit("updateAnim", { ID: socket.id, anim: player.animation });
     }
   })
 
@@ -113,7 +117,7 @@ io.on("connection", (socket) => {
 
   socket.on("plateStateC", (data) => {
     Object.keys(this.plates).forEach(id => {
-      
+
       var infoPlate = this.plates[id];
       if (infoPlate.ID == data.ID) {
         console.log(data);
@@ -136,12 +140,12 @@ io.on("connection", (socket) => {
   });
 
   socket.on("updateRequest", () => {
-    socket.emit("update", { players: this.players, cats: this.cats});
+    socket.emit("update", { players: this.players, cats: this.cats });
   });
 
   socket.on("ItEnded", () => {
-    socket.emit("STOP",this.player[socket.id].name);
-    socket.broadcast.emit("STOP",this.player[socket.id].name);
+    socket.emit("STOP", this.player[socket.id].name);
+    socket.broadcast.emit("STOP", this.player[socket.id].name);
   });
   socket.on("disconnect", () => {
     numPlayers--;
@@ -154,7 +158,7 @@ io.on("connection", (socket) => {
         }
       });
     }
-    socket.broadcast.emit("playerOut", { ID: socket.id, name: this.players[socket.id].name});
+    socket.broadcast.emit("playerOut", { ID: socket.id, name: this.players[socket.id].name });
     delete this.players[socket.id];
   });
 });

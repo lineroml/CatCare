@@ -4,6 +4,7 @@ export class OtherP {
         this.infoPlayers = {};
         this.players = {};
         this.textPlayers = {};
+        this.anims = {};
     }
 
     updateInfo(players) {
@@ -13,12 +14,13 @@ export class OtherP {
     init() {
         Object.keys(this.infoPlayers).forEach(id => {
             var player = this.infoPlayers[id];
-            this.players[player.ID] = this.scene.add.sprite(player.x, player.y, player.skin);
+            this.players[player.ID] = this.scene.add.sprite(player.x, player.y, player.skin, 9);
             this.textPlayers[player.ID] = this.scene.add.text(player.x, player.y / 4, player.name, {
                 fontSize: '30px',
                 fill: '#111',
                 fontFamily: 'pixel'
             });
+            this.anims[player.ID] = 'idle';
         });
     }
 
@@ -32,11 +34,14 @@ export class OtherP {
                 text.y = player.y - 150 / 2 - 21;
             this.players[id].x = player.x;
             this.players[id].y = player.y;
-            this.players[id].play(player.anim);
+            if (this.anims[id] != player.animation) {
+                this.anims[id] = player.animation;
+                this.players[id].play(player.animation);
+            }
         });
     }
 
-    delete(ID){
+    delete(ID) {
         delete this.infoPlayers[ID];
         this.players[ID].destroy();
         delete this.players[ID];
