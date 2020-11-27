@@ -4,12 +4,12 @@ import { ServerCreator } from '/ServerCreator.js';
 import { MPtest } from '/MPtest.js'
 import { PauseMenu } from '/PauseMenu.js';
 import { PlayersInfo } from '/PlayersInfo.js';
-import { winner } from '/winner.js';
+import { Winner } from '/Winner.js';
 const config = {
     type: Phaser.AUTO,
     width: 800,
     height: 600,
-    scene: [Main, ScenaP, ServerCreator, MPtest, PauseMenu, PlayersInfo,winner],
+    scene: [Main, ScenaP, ServerCreator, MPtest, PauseMenu, PlayersInfo,Winner],
     physics: {
         default: 'arcade',
         arcade: {
