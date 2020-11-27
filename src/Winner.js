@@ -2,7 +2,9 @@
  * Escena que corresponde a la pantalla final donde se indica al ganador del juego multijugador
  */
 export class Winner extends Phaser.Scene{
+    
     constructor(){
+        
         super({key: 'Winner'})
     }
     init(data){
