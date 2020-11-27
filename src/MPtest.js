@@ -52,7 +52,10 @@ export class MPtest extends Phaser.Scene {
 
         this.plates = [new Plate(this, 'FOOD', 0), new Plate(this, 'WATER', 1)];
 
-        this.cats = [new Cat(this, 'Charlotto', 'GREEN')];
+        this.cats = [new Cat(this, 'Bambi', 'YELLOW'),
+        new Cat(this, 'Charlotto','GREEN'),
+        new Cat(this, 'Lion','GREEN'),
+        new Cat(this, 'Katty','RED')];
         this.catStates = [];
 
         this.judge = new Judge(this, [5, 0], 100);
@@ -92,7 +95,6 @@ export class MPtest extends Phaser.Scene {
 
         for (let i = 0; i < this.cats.length; i++) {
             var cat = this.cats[i];
-            console.log(cat.name);
             cat.create(bg);
         }
 
