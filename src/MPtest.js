@@ -166,9 +166,9 @@ export class MPtest extends Phaser.Scene {
             this.socket.emit("updateRequest");
         });
 
-        this.socket.on("STOP", () => {
-            console.log("Ya ha terminado");
-            this.scene.sleep();
+        this.socket.on("STOP", (data) => {
+            this.scene.pause();
+            this.scene.launch('Winner',{scene: this.scene.key,name: data})
         })
     }
 
