@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: MPtest.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: MPtest.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { Ground } from "/Ground.js";
+import { Player } from "/Player.js";
+import { OtherP } from "/OtherP.js"
+import { Shelter } from "/Shelter.js";
+import { Plate } from "/Plate.js";
+import { Cat } from "/Cat.js";
+import { Judge } from "./Judge.js";
+/**
+ * Escena correspondiente al primer mundo en la modalidad multijugador
+ */
+export class MPtest extends Phaser.Scene {
+    constructor() {
+        super({ key: "MPtest" });
+    }
+
+    init(data) {
+        this.socket = data.socket;
+        this.infoOthers = {};
+        this.otherPlayers = new OtherP(this);
+        this.playerList = data.playerList;
+
+        var players = data.players;
+        Object.keys(players).forEach(id => {
+            var infoPlayer = players[id];
+            if (infoPlayer.ID != this.socket.id) {
+                this.infoOthers[infoPlayer.ID] = infoPlayer;
+            }
+        });
+
+        this.otherPlayers.updateInfo(this.infoOthers);
+
+        this.timer = this.time.addEvent({
+            delay: 10,
+            callback: () => {
+                this.socket.emit("updateRequest");
+            },
+            callbackScope: this,
+            loop: true
+        });
+    }
+
+    preload() {
+        this.load.image('bg', '/resources/game/BackGround/bg.png');
+        this.load.image('zoneRed', '/resources/game/Entities/Cats/zoneRed.png');
+        this.load.image('zoneYellow', '/resources/game/Entities/Cats/zoneYellow.png');
+
+        this.player = new Player(this);
+
+        this.plataforms = new Ground(this);
+
+        this.shelter = new Shelter(this);
+
+        this.plates = [new Plate(this, 'FOOD', 0), new Plate(this, 'WATER', 1)];
+
+        this.cats = [new Cat(this, 'Charlotto', 'GREEN')];
+        this.catStates = [];
+
+        this.judge = new Judge(this, [5, 0], 100);
+    }
+
+    create() {
+        this.listeners();
+        //imagen de fondo y camara
+        var bg = this.add.image(0, 0, 'bg').setOrigin(0, 0);
+        this.physics.world.setBounds(0, 0, bg.displayWidth, bg.displayHeight);
+        this.cameras.main.setBounds(0, 0, bg.displayWidth, bg.displayHeight);
+
+        //Puestos de reabastecimiento
+        this.shelter.create();
+        this.shelter.addShelter(bg.displayWidth-75, bg.displayHeight-185/2-32, 'FOOD');
+        this.shelter.addShelter(75, bg.displayHeight-185/2-32, 'WATER');
+        this.shelter.addShelter(75, 418-185/2, 'MED');
+        this.shelter.addShelter(bg.displayWidth-75, 418-185/2, 'FUN');
+
+        //Creando plataformas
+        this.plataforms.create();
+        for (let i = 0; i &lt; 7; i++) {
+            this.plataforms.addPlataform(500 * i, bg.displayHeight - 32, 'S');
+        }
+        this.plataforms.addPlataform(282,486,'SS');
+        this.plataforms.addPlataform(870,486,'SS');
+        this.plataforms.addPlataform(1151,418,'SS');
+        this.plataforms.addPlataform(0,418,'SS')
+
+
+        //Platos de agua y comida
+        this.plates[0].put(bg.displayWidth/2-50, 600);
+        this.plates[1].put(bg.displayWidth/2+50, 600);
+
+        this.otherPlayers.init();
+        this.player.create(this.plataforms.plat,bg);
+
+        for (let i = 0; i &lt; this.cats.length; i++) {
+            var cat = this.cats[i];
+            console.log(cat.name);
+            cat.create(bg);
+        }
+
+        this.judge.create();
+
+        this.cameras.main.startFollow(this.player.player);
+        this.goToStart = this.add.image(200, 150, 'goToMenu').setScrollFactor(0, 0).setScale(0.5, 0.5).setInteractive(new Phaser.Geom.Rectangle(200, 150, 375, 290), () => {
+            this.scene.stop();
+            this.scene.start('main');
+        }).setVisible(false);
+    }
+
+    update() {
+        this.player.update();
+        this.socket.emit("UpdatePlayer", {
+            ID: this.socket.id,
+            x: this.player.player.x,
+            y: this.player.player.y
+        });
+        this.catUpdate();
+        this.judge.update();
+    }
+
+    /**
+     * Método que contiene las funciones de escucha de los evento emitidos por el servidor
+     */
+    listeners() {
+        this.socket.on("plateUpdate", (data)=>{
+            this.plates.forEach(plate => {
+                if(plate.ID === data.ID){
+                    console.log(plate.full,data.full)
+                    plate.change(data.full);
+                }
+            });
+            console.log(this.plates)
+        });
+
+        this.socket.on("animateCat", (data)=>{
+            var i = 0;
+            while(this.cats[i].name != data.name){
+                i++;
+            }
+            this.cats[i].cat.play(data.animation);
+        });
+
+        this.socket.on("update", data => {
+            var players = data.players;
+            Object.keys(players).forEach(id => {
+                var infoPlayer = players[id];
+                if (infoPlayer.ID != this.socket.id) {
+                    this.infoOthers[infoPlayer.ID] = infoPlayer;
+                }
+            });
+            this.otherPlayers.updateInfo(this.infoOthers);
+            this.otherPlayers.update();
+
+            if (this.cats[0].mindlessCat) {
+                var cats = data.cats;
+                for (let i = 0; i &lt; this.cats.length; i++) {
+                    var cat = this.cats[i];
+                    var infoCat = cats[cat.name];
+                    cat.setXY(infoCat.x, infoCat.y);
+                    cat.state = infoCat.state;
+                }
+            }
+        });
+        
+        
+
+        if (!this.cats[0].mindlessCat) {
+            this.socket.on("catScape", (data) => {
+                var cat = this.catByName(data.name);
+                cat.approach({ x: data.zoneX }, { x: data.playerX });
+            });
+
+        }
+        this.socket.on("playerOut", (data) => {
+            var i = 0;
+            while (this.playerList[i] != data.ID) {
+                i++;
+            }
+            delete this.playerList[i];
+            this.otherPlayers.delete(data.ID);
+            this.socket.emit("updateRequest");
+        });
+
+        this.socket.on("STOP", (data) => {
+            this.scene.pause();
+            this.scene.launch('Winner',{scene: this.scene.key,name: data})
+        })
+    }
+
+    /**
+     * Función que dado un nombre retorna el objeto Cat en cuestión
+     * @param {String} name 
+     * @returns {Cat}
+     */
+    catByName(name) {
+        for (let i = 0; i &lt; this.cats.length; i++) {
+            var cat = this.cats[i];
+            if (cat.name = name) {
+                return cat;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Método encargado de actualizar el estado de cada gato de la escena
+     * y crear la lista desplegable con indicando los estados anormales de los mininos
+     */
+    catUpdate() {
+        for (let i = 0; i &lt; this.catStates.length; i++) {
+            var cat = this.catStates[i];
+            cat.destroy();
+        }
+        this.catState = [];
+        var num = 0;
+        for (let i = 0; i &lt; this.cats.length; i++) {
+            var cat = this.cats[i];
+            cat.update();
+            if (cat.state != 'NORMAL') {
+                this.catStates.push(this.add.text(100, 50 + 50 * num, cat.name + ': ' + cat.state, {
+                    fontSize: '25px',
+                    fill: '#111',
+                    fontFamily: 'pixel',
+                    backgroundColor: cat.color
+                }).setScrollFactor(0, 0));
+                num++;
+            }
+        }
+    }
+
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Cat.html">Cat</a></li><li><a href="Ground.html">Ground</a></li><li><a href="Judge.html">Judge</a></li><li><a href="Main.html">Main</a></li><li><a href="MPtest.html">MPtest</a></li><li><a href="OtherP.html">OtherP</a></li><li><a href="PauseMenu.html">PauseMenu</a></li><li><a href="Plate.html">Plate</a></li><li><a href="Player.html">Player</a></li><li><a href="PlayersInfo.html">PlayersInfo</a></li><li><a href="ScenaP.html">ScenaP</a></li><li><a href="ServerCreator.html">ServerCreator</a></li><li><a href="Shelter.html">Shelter</a></li><li><a href="Tool.html">Tool</a></li><li><a href="Winner.html">Winner</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Fri Nov 27 2020 06:16:26 GMT-0500 (GMT-05:00)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
