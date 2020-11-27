@@ -5,7 +5,7 @@ export class PlayersInfo extends Phaser.Scene {
 
     init(data) {
         this.playerList = data.playerList;
-        this.ID = data.ID;
+        this.NAME = data.NAME;
     }
 
     preload() {
@@ -15,7 +15,7 @@ export class PlayersInfo extends Phaser.Scene {
     }
     create() {
         this.background = this.add.image(400, 300, 'pauseMenu').setScrollFactor(0, 0).setVisible(true);
-        this.add.text(130, 50, this.ID, {
+        this.add.text(130, 50, this.NAME, {
             fontSize: '30px',
             fill: '#FF0000',
             fontFamily: 'pixel'
