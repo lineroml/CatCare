@@ -35,7 +35,17 @@ export class Plate {
         this.plate.setTexture('plate');
         if (this.scene.socket != undefined) {
             this.scene.socket.emit("plateStateC", { ID: this.ID, full: false });
-            this.scene.socket.emit("updateRequest");
         }
+    }
+
+    change(state){
+        if(state){
+            this.full = true;
+            var t = (this.type == 'FOOD') ? 'fPlate' : 'wPlate';
+        }else{
+            this.full = false;
+            var t = 'plate';
+        }
+        this.plate.setTexture(t);
     }
 }

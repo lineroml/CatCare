@@ -99,11 +99,14 @@ io.on("connection", (socket) => {
 
   socket.on("plateStateC", (data) => {
     Object.keys(this.plates).forEach(id => {
+      
       var infoPlate = this.plates[id];
       if (infoPlate.ID == data.ID) {
+        console.log(data);
         infoPlate.full = data.full;
       }
     });
+    socket.broadcast.emit("plateUpdate", data);
   });
 
   socket.on("newGameS", (data) => {
@@ -119,7 +122,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("updateRequest", () => {
-    socket.emit("update", { players: this.players, plates: this.plates, cats: this.cats });
+    socket.emit("update", { players: this.players, cats: this.cats});
   });
 
   socket.on("ItEnded", () => {
@@ -129,14 +132,14 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     numPlayers--;
     console.log("user disconnected", socket.id);
-    var temp = this.primeControler;
-    Object.keys(this.players).forEach(id =>{
-      if(id != this.primeControler & temp == this.primeControler){
-        this.primeControler = id;
-        console.log('Lo encontré')
-      }
-    });
-    console.log('Sigo con mi vida')
+    if (socket.id == this.primeControler) {
+      var temp = this.primeControler;
+      Object.keys(this.players).forEach(id => {
+        if (id != this.primeControler & temp == this.primeControler) {
+          this.primeControler = id;
+        }
+      });
+    }
     delete this.players[socket.id];
     socket.broadcast.emit("playerOut", { ID: socket.id });
   });

@@ -25,7 +25,10 @@ export class ScenaP extends Phaser.Scene {
 
         this.judge = new Judge(this, [10, 10], 100);
 
-        this.cats = [new Cat(this, 'Peluche', 'YELLOW')];
+        this.cats = [new Cat(this, 'Bambi', 'YELLOW'),
+                     new Cat(this, 'Charlotto','GREEN'),
+                     new Cat(this, 'Lion','GREEN'),
+                     new Cat(this, 'Katty','RED')];
         this.catStates = [];
 
     }

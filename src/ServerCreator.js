@@ -1,5 +1,6 @@
 import { Player } from '/Player.js';
 import { Ground } from '/Ground.js';
+import {Shelter }from '/Shelter.js'
 export class ServerCreator extends Phaser.Scene {
     constructor() {
         super({ key: 'ServerCreator' });
@@ -7,13 +8,15 @@ export class ServerCreator extends Phaser.Scene {
 
     preload() {
         this.load.image('bg', '/resources/game/BackGround/bg.png');
-        this.load.image('speaker','/resources/game/speak.png');
+        this.load.image('speaker', '/resources/game/speak.png');
         this.load.spritesheet('Eli', '/resources/game/Entities/helper.png', {
             frameWidth: 80,
             frameHeight: 150
         });
-        
+
         this.plataforms = new Ground(this);
+
+        this.shelter = new Shelter(this);
 
         this.player = new Player(this);
 
@@ -36,24 +39,69 @@ export class ServerCreator extends Phaser.Scene {
         for (let i = 0; i < 7; i++) {
             this.plataforms.addPlataform(500 * i, bg.displayHeight - 32, 'S');
         }
-        //Creando plataformas
+        
+
+        this.shelter.create();
+        this.shelter.addShelter(75, bg.displayHeight-185/2-32, 'FOOD');
+        this.shelter.addShelter(775, bg.displayHeight-185/2-32, 'WATER');
+        this.shelter.addShelter(1075, bg.displayHeight-185/2-32, 'MED');
+        this.shelter.addShelter(bg.displayWidth-75, bg.displayHeight-185/2-32, 'FUN');
+
+
 
         this.Eli = this.physics.add.sprite(bg.displayWidth / 4, 593, 'Eli');
         this.Eli.play('eliStay');
-        this.speak = this.add.image(bg.displayWidth/4-25,bg.displayHeight-270, 'speaker');
+        this.speak = this.add.image(bg.displayWidth / 4 - 25, bg.displayHeight - 270, 'speaker');
         this.speak.setScale(0.6);
-        this.speak.setOrigin(0.1,0.1);
+        this.speak.setOrigin(0.1, 0.1);
+        this.speakText = this.add.text(bg.displayWidth / 4 - 30, bg.displayHeight - 230, 'Bienvenido a la sala de espera', {
+            fontSize: '20px',
+            fill: '#301717',
+            fontFamily: 'pixel'
+        });
 
         //Creando Jugador
         this.player.create(this.plataforms.plat, bg);
 
         //speaker color #301717
         //portales
-        this.secondWorld = this.physics.add.image(100, 400, 'multiP').setScale(0.5);
-        this.physics.add.collider(this.plataforms.plat, this.secondWorld);
+        this.key = this.physics.add.image(bg.displayWidth*3/4-100,bg.displayHeight-100,'keyBotton');
+        this.key.setImmovable();
+        this.add.text(bg.displayWidth*3/4-200,bg.displayHeight-210,'Es momento de trabajar\n  ¡A cuidarlos a todos!\n                \\/',{
+            fontSize: '25px',
+            fill: '#301717',
+            fontFamily: 'pixel'
+        });
+        this.key.body.allowGravity = false;
+        var txt = ['Puesto de Comida\nLa comida se usa para llenar\nlos platos para saciar el\nestado HUNGRY',
+                   'Puesto de Agua\nEl agua se usa para llenar\nlos platos para saciar el\nestado THIRSTHY',
+                   'Puesto de Medicina\nLas medicinas curan\na los gatos del\nestado SICK',
+                   'Puesto de Juguetes\nLos juguetes quitan el\nestado BORED'];
+        this.add.text(0,bg.displayHeight-350,txt[0],{
+            fontSize: '25px',
+            fill: '#301717',
+            fontFamily: 'pixel'
+        });
+        this.add.text(700,bg.displayHeight-350,txt[1],{
+            fontSize: '25px',
+            fill: '#301717',
+            fontFamily: 'pixel'
+        });
+        this.add.text(1000,bg.displayHeight-350,txt[2],{
+            fontSize: '25px',
+            fill: '#301717',
+            fontFamily: 'pixel'
+        });
+        this.add.text(bg.displayWidth-185,bg.displayHeight-350,txt[3],{
+            fontSize: '25px',
+            fill: '#301717',
+            fontFamily: 'pixel'
+        });
 
-        this.physics.add.collider(this.plataforms.plat,this.Eli);
-        this.physics.add.overlap(this.player.player, this.secondWorld, () => {
+        this.physics.add.collider(this.plataforms.plat, this.key);
+
+        this.physics.add.collider(this.plataforms.plat, this.Eli);
+        this.physics.add.overlap(this.player.player, this.key, () => {
             var selectedWorld = "MPtest";
             this.socket.emit("newGameS", { select: selectedWorld, password: this.socket.id });
         }, () => { return this.player.eKey.isDown; }, this);
@@ -79,6 +127,7 @@ export class ServerCreator extends Phaser.Scene {
         });
 
         this.socket.on("newPlayer", (data) => {
+            this.speakText.setText('Se ha conectado '+data.ID);
             this.addPlayer(data);
         });
 
@@ -88,6 +137,7 @@ export class ServerCreator extends Phaser.Scene {
                 i++;
             }
             delete this.playerList[i];
+            this.speakText.setText('Se ha desconectado '+data.ID);
         });
     }
 

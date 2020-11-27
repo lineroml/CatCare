@@ -41,8 +41,6 @@ export class MPtest extends Phaser.Scene {
         this.load.image('bg', '/resources/game/BackGround/bg.png');
         this.load.image('zoneRed', '/resources/game/Entities/Cats/zoneRed.png');
         this.load.image('zoneYellow', '/resources/game/Entities/Cats/zoneYellow.png');
-        this.load.image('pauseMenu', '/resources/game/menu.png');
-        this.load.image('goToMenu', '/resources/game/gotomenu.png');
 
         this.player = new Player(this);
 
@@ -98,9 +96,7 @@ export class MPtest extends Phaser.Scene {
         this.judge.create();
 
         this.cameras.main.startFollow(this.player.player);
-        this.menu = this.add.image(400, 300, 'pauseMenu').setScrollFactor(0, 0).setVisible(false);
         this.goToStart = this.add.image(200, 150, 'goToMenu').setScrollFactor(0, 0).setScale(0.5, 0.5).setInteractive(new Phaser.Geom.Rectangle(200, 150, 375, 290), () => {
-            console.log('stopea todo')
             this.scene.stop();
             this.scene.start('main');
         }).setVisible(false);
@@ -119,6 +115,16 @@ export class MPtest extends Phaser.Scene {
     }
 
     listeners() {
+        this.socket.on("plateUpdate", (data)=>{
+            this.plates.forEach(plate => {
+                if(plate.ID === data.ID){
+                    console.log(plate.full,data.full)
+                    plate.change(data.full);
+                }
+            });
+            console.log(this.plates)
+        });
+
         this.socket.on("update", data => {
             var players = data.players;
             Object.keys(players).forEach(id => {
@@ -130,22 +136,6 @@ export class MPtest extends Phaser.Scene {
             this.otherPlayers.updateInfo(this.infoOthers);
             this.otherPlayers.update();
 
-            var plates = data.plates;
-            Object.keys(plates).forEach(id => {
-                var plateInfo = plates[id];
-                for (let i = 0; i < this.plates.length; i++) {
-                    var plate = this.plates[i];
-                    if (plate.ID == plateInfo.ID && plate.full != plateInfo.full) {
-                        plate.full = plateInfo.full;
-                        if (plate.full = true) {
-                            var t = (plate.type == 'FOOD') ? 'fPlate' : 'wPlate';
-                            plate.plate.setTexture(t);
-                        } else {
-                            plate.plate.setTexture('plate');
-                        }
-                    }
-                }
-            });
             if (this.cats[0].mindlessCat) {
                 var cats = data.cats;
                 for (let i = 0; i < this.cats.length; i++) {
@@ -156,6 +146,9 @@ export class MPtest extends Phaser.Scene {
                 }
             }
         });
+        
+        
+
         if (!this.cats[0].mindlessCat) {
             this.socket.on("catScape", (data) => {
                 var cat = this.catByName(data.name);
@@ -175,7 +168,6 @@ export class MPtest extends Phaser.Scene {
 
         this.socket.on("STOP", () => {
             console.log("Ya ha terminado");
-            this.menu.setVisible(true);
             this.scene.sleep();
         })
     }
