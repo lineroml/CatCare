@@ -6,6 +6,10 @@ export class ServerCreator extends Phaser.Scene {
         super({ key: 'ServerCreator' });
     }
 
+    init(name){
+        this.PNAME = name;
+    }
+
     preload() {
         this.load.image('bg', '/resources/game/BackGround/bg.png');
         this.load.image('speaker', '/resources/game/speak.png');
@@ -23,10 +27,16 @@ export class ServerCreator extends Phaser.Scene {
         this.playerList = [];
 
         this.socket = io();
-
     }
 
     create() {
+        this.socket.emit('setName',this.PNAME);
+        this.time.delayedCall(500, () => {
+            this.socket.emit("tellME");
+        }, [], this);
+        this.socket.on("actualPlayers", (data) => {
+            this.setList(data);
+        });
         //imagen de fondo y camara
         var bg = this.add.image(0, 0, 'bg').setOrigin(0, 0);
         this.physics.world.setBounds(0, 0, bg.displayWidth, bg.displayHeight);
@@ -122,22 +132,18 @@ export class ServerCreator extends Phaser.Scene {
             this.scene.start(data.select, send);
         });
 
-        this.socket.on("actualPlayers", (data) => {
-            this.setList(data);
-        });
-
         this.socket.on("newPlayer", (data) => {
-            this.speakText.setText('Se ha conectado '+data.ID);
+            this.speakText.setText('Se ha conectado '+data.name);
             this.addPlayer(data);
         });
 
         this.socket.on("playerOut", (data) => {
             var i = 0;
-            while (this.playerList[i] != data.ID) {
+            while (this.playerList[i] != data.name) {
                 i++;
             }
             delete this.playerList[i];
-            this.speakText.setText('Se ha desconectado '+data.ID);
+            this.speakText.setText('Se ha desconectado '+data.name);
         });
     }
 
@@ -146,12 +152,14 @@ export class ServerCreator extends Phaser.Scene {
     }
 
     setList(list) {
-        Object.keys(list).forEach(id => {
-            this.playerList.push(list[id].ID);
+        Object.keys(list.players).forEach(id => {
+            var player = list.players[id];
+            if(player.ID != this.socket.id)
+                this.playerList.push(player.name);
         });
     }
 
     addPlayer(player) {
-        this.playerList.push(player.ID);
+        this.playerList.push(player.name);
     }
 }

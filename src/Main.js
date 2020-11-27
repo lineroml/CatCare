@@ -21,7 +21,8 @@ export class Main extends Phaser.Scene {
         this.load.image('keyBotton', '/resources/game/nekoKey.png');
 
         this.plataforms = new Ground(this);
-        const name = localStorage.getItem("name");                                                                                                 
+        const name = localStorage.getItem("name");
+        this.PNAME = name;
         this.player = new Player(this);
         this.cats = [new Cat(this,'Charlotto','GREEN'), new Cat(this,'Lion','GREEN')];
         this.plates = [new Plate(this,'WATER',0), new Plate(this,'FOOD',1)];
@@ -85,7 +86,7 @@ export class Main extends Phaser.Scene {
 
         this.physics.add.overlap(this.player.player,this.key,()=>{
             this.scene.stop();
-            this.scene.start("ServerCreator")
+            this.scene.start("ServerCreator",this.PNAME);
         },()=>{return this.player.eKey.isDown;},this);
         //portales
 

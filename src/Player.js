@@ -137,7 +137,7 @@ export class Player {
 
         if (this.pKey.isDown & !this.paused & this.scene.socket != null) {
             this.paused = true;
-            this.scene.scene.launch('PlayersInfo', { playerList: this.scene.playerList, ID: this.scene.socket.id })
+            this.scene.scene.launch('PlayersInfo', { playerList: this.scene.playerList, NAME: this.scene.PNAME })
         }
 
     }

@@ -28,7 +28,8 @@ io.on("connection", (socket) => {
   }
   var socketid = socket.id;
   if (numPlayers == 1) this.primeControler = socket.id;
-  socket.emit("actualPlayers", this.players);
+
+  socket.emit("actualPlayers", {players: this.players});
   console.log("Alguien se ha conectado", socketid);
   this.players[socketid] = {
     ID: socketid,
@@ -40,7 +41,10 @@ io.on("connection", (socket) => {
     tool: undefined
   };
 
-  socket.broadcast.emit("newPlayer", this.players[socketid]);
+  socket.on("setName", name =>{
+    this.players[socket.id].name = name;
+    socket.broadcast.emit("newPlayer", this.players[socketid]);
+  })
 
   socket.on("newCat", (data) => {
     if (data.password == this.primeControler) {
@@ -54,6 +58,9 @@ io.on("connection", (socket) => {
       socket.broadcast.emit("mindlessCat");
     }
   });
+  socket.on("tellME", ()=>{
+    socket.emit("actualPlayers", {players: this.players});
+  })
 
   socket.on("catUpdate", (data) => {
     var cat = this.cats[data.name];
@@ -140,7 +147,7 @@ io.on("connection", (socket) => {
         }
       });
     }
+    socket.broadcast.emit("playerOut", { ID: socket.id, name: this.players[socket.id].name});
     delete this.players[socket.id];
-    socket.broadcast.emit("playerOut", { ID: socket.id });
   });
 });
