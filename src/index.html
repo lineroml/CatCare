@@ -20,7 +20,7 @@
                     <input type="text" id="fname" name="fname"><br>
                 </form>
             </div>
-            <input type="button"  onclick="location.href='Main.html';" value="Go Play!" />
+            <input type="button" id="play" value="Go Play!" />
         </div>
     </div>
 
@@ -36,3 +36,12 @@
 </body>
 
 </html>
+
+<script>
+    function onclick(){
+        const name = document.getElementById("fname").value;
+        localStorage.setItem("name",name);
+        location.href='Main.html';
+    }
+    document.getElementById("play").addEventListener("click", onclick);
+</script>
