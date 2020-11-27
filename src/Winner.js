@@ -3,9 +3,9 @@
  */
 
 
-export class winner extends Phaser.Scene{
+export class Winner extends Phaser.Scene{
     constructor(){
-        super({key: 'winner'})
+        super({key: 'Winner'})
 
     }
     init(data){
@@ -30,5 +30,6 @@ export class winner extends Phaser.Scene{
             this.scene.stop();
             this.scene.start('main')
         })
+        //
     }
 }
