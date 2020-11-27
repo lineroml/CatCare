@@ -9,7 +9,7 @@ const config = {
     type: Phaser.AUTO,
     width: 800,
     height: 600,
-    scene: [Main, ScenaP, ServerCreator, MPtest, PauseMenu, PlayersInfo,winner],
+    scene: [Main, ScenaP, ServerCreator, MPtest, PauseMenu, PlayersInfo,Winner],
     physics: {
         default: 'arcade',
         arcade: {
