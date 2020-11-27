@@ -1,3 +1,6 @@
+/**
+ * Escena que corresponde a la pantalla final donde se indica al ganador del juego multijugador
+ */
 export class Winner extends Phaser.Scene{
     constructor(){
         super({key: 'Winner'})
@@ -10,6 +13,7 @@ export class Winner extends Phaser.Scene{
     preload(){
         this.load.image('win','/resources/game/winner.png');
     }
+
     create(){
         var a = this.add.image(0,0,'win').setInteractive();
         a.setOrigin(0,0);

@@ -1,6 +1,11 @@
 import { Player } from '/Player.js';
 import { Ground } from '/Ground.js';
-import {Shelter }from '/Shelter.js'
+import {Shelter }from '/Shelter.js';
+
+/**
+ * Escena que cumple la función de sala de espera mientras se conectan los jugadores para la
+ * modalidad multijugador
+ */
 export class ServerCreator extends Phaser.Scene {
     constructor() {
         super({ key: 'ServerCreator' });
@@ -151,6 +156,11 @@ export class ServerCreator extends Phaser.Scene {
         this.player.update();
     }
 
+    /**
+     * Función que dada la lista de jugadores en el servidor añade sus nombres a las lista de 
+     * jugadores
+     * @param {*} list
+     */
     setList(list) {
         Object.keys(list.players).forEach(id => {
             var player = list.players[id];
@@ -159,6 +169,10 @@ export class ServerCreator extends Phaser.Scene {
         });
     }
 
+    /**
+     * Método que añade el nombre de un jugador entrante a la lista de jugadores
+     * @param {*} player 
+     */
     addPlayer(player) {
         this.playerList.push(player.name);
     }

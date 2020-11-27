@@ -5,7 +5,9 @@ import { Shelter } from "/Shelter.js";
 import { Plate } from "/Plate.js";
 import { Cat } from "/Cat.js";
 import { Judge } from "./Judge.js";
-
+/**
+ * Escena correspondiente al primer mundo en la modalidad multijugador
+ */
 export class MPtest extends Phaser.Scene {
     constructor() {
         super({ key: "MPtest" });
@@ -55,6 +57,7 @@ export class MPtest extends Phaser.Scene {
 
         this.judge = new Judge(this, [5, 0], 100);
     }
+
     create() {
         this.listeners();
         //imagen de fondo y camara
@@ -106,13 +109,16 @@ export class MPtest extends Phaser.Scene {
         this.player.update();
         this.socket.emit("UpdatePlayer", {
             ID: this.socket.id,
-            x: this.player.getX(),
-            y: this.player.getY()
+            x: this.player.player.x,
+            y: this.player.player.y
         });
         this.catUpdate();
         this.judge.update();
     }
 
+    /**
+     * Método que contiene las funciones de escucha de los evento emitidos por el servidor
+     */
     listeners() {
         this.socket.on("plateUpdate", (data)=>{
             this.plates.forEach(plate => {
@@ -179,6 +185,11 @@ export class MPtest extends Phaser.Scene {
         })
     }
 
+    /**
+     * Función que dado un nombre retorna el objeto Cat en cuestión
+     * @param {String} name 
+     * @returns {Cat}
+     */
     catByName(name) {
         for (let i = 0; i < this.cats.length; i++) {
             var cat = this.cats[i];
@@ -188,6 +199,11 @@ export class MPtest extends Phaser.Scene {
         }
         return null;
     }
+
+    /**
+     * Método encargado de actualizar el estado de cada gato de la escena
+     * y crear la lista desplegable con indicando los estados anormales de los mininos
+     */
     catUpdate() {
         for (let i = 0; i < this.catStates.length; i++) {
             var cat = this.catStates[i];

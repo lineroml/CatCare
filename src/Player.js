@@ -1,6 +1,12 @@
 import { Tool } from '/Tool.js';
-
+/**
+ * Clase que representa la logica destrás del comportamiendo del jugador
+ */
 export class Player {
+    /**
+     * Crea un objeto Player junto con la logica detrás de este
+     * @param {Phaser.Scene} scena Escena donde se va a agregar al jugador
+     */
     constructor(scena) {
         this.scene = scena;
         this.scene.load.spritesheet('player', '/resources/game/Entities/spriteSheetPJ.png', {
@@ -90,26 +96,6 @@ export class Player {
         this.tool.create();
     }
 
-    getTool() {
-        return this.tool.selectedTool
-    }
-
-    getX() {
-        return this.player.x;
-    }
-
-    getY() {
-        return this.player.y;
-    }
-
-    getVelocityX() {
-        return this.player.body.velocity.x;
-    }
-
-    getVelocityY() {
-        return this.player.body.velocity.y
-    }
-
     update() {
         this.move();
 
@@ -149,6 +135,9 @@ export class Player {
 
     }
 
+    /**
+     * Método callback que contiene la logica detrás del salto del jugador al estar en contacto con una superficie
+     */
     jump() {
         if (this.anime) {
             this.anime = false;
@@ -163,7 +152,9 @@ export class Player {
         }
     }
 
-
+    /**
+     * Método callback que contiene la logica detrás del movimiento del jugador
+     */
     move() {
         if (this.cursors.down.isUp) {
             if (this.cursors.left.isDown) {
@@ -224,6 +215,11 @@ export class Player {
         }
     }
 
+    /**
+     * Función callback que evalua la interacción entre los platos de comida y el jugador
+     * @param {*} plate 
+     * @param {*} _ 
+     */
     toolAndPlate(plate, _) {
         var tempPlate = this.selectedPlate(plate);
         if (this.tool.selectedTool == tempPlate.type) {
@@ -233,28 +229,48 @@ export class Player {
 
     }
 
+    /**
+     * Función callback para seleccionar la herramienta de Comida
+     */
     pickUpFood() {
         this.tool.selectFood();
     }
 
+    /**
+     * Función callback para seleccionar la herramienta de Agua
+     */
     pickUpWater() {
         this.tool.selectWater();
     }
 
+    /**
+     * Función callback para seleccionar la herramienta de Medicinas
+     */
     pickUpMed() {
         this.tool.selectMed();
     }
 
+    /**
+     * Función callback para seleccionar la herramienta de Juguete
+     */
     pickUpFun() {
         this.tool.selectFun();
     }
 
+    /**
+     * Función que dada una imagen de un plato regresa el objeto Plate correspondiente
+     * @param {Phaser.Physics.Arcade.Image} plate
+     * @returns Objeto Plate correspondiente a la imagen indicada
+     */
     selectedPlate(plate) {
         for (let i = 0; i < this.scene.plates.length; i++) {
             if (this.scene.plates[i].plate == plate) return this.scene.plates[i];
         }
     }
 
+    /**
+     * Función callback para soltar la herramienta seleccionada
+     */
     dropTool() {
         this.tool.dropTool();
     }

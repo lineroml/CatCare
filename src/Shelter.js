@@ -1,4 +1,11 @@
+/**
+ * Clase que administra la creación y posicionamiento de los puntos de reabastecimiento
+ */
 export class Shelter {
+    /**
+     * Crea un objeto Shelter que administra los puntos de reabastecimiento en la escena indicada
+     * @param {Phaser.Scene} scena 
+     */
     constructor(scena) {
         this.scene = scena;
         this.scene.load.image('comida', '/resources/game/Shelters/food.png');
@@ -14,6 +21,12 @@ export class Shelter {
         this.fun = this.scene.physics.add.staticGroup();
     }
 
+    /**
+     * Añade en las coordenada indicadas un punto de reabastecimiento
+     * @param {integer} x 
+     * @param {integer} y 
+     * @param {String} type 
+     */
     addShelter(x, y, type) {
         switch (type) {
             case 'FOOD':

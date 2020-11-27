@@ -1,3 +1,6 @@
+/**
+ * Escena que representa la ventana donde se indica la lista de jugadores en la partida
+ */
 export class PlayersInfo extends Phaser.Scene {
     constructor() {
         super({ key: 'PlayersInfo' });
@@ -13,6 +16,7 @@ export class PlayersInfo extends Phaser.Scene {
         this.pKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P);
         this.pKey.isUp = false;
     }
+    
     create() {
         this.background = this.add.image(400, 300, 'pauseMenu').setScrollFactor(0, 0).setVisible(true);
         this.add.text(130, 50, this.NAME, {
@@ -34,6 +38,7 @@ export class PlayersInfo extends Phaser.Scene {
             }
         });
     }
+
     update() {
         if (this.pKey.isUp) {
             this.scene.stop();

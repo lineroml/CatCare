@@ -1,4 +1,12 @@
+/**
+ * Clase que administra la visualización y contante actualización de los otros jugadores en el modo
+ * multijugador
+ */
 export class OtherP {
+    /**
+     * Crea un objeto OtherP que administra las imagened de los demás jugadores en escena indicada
+     * @param {Phaser.Scene} scena 
+     */
     constructor(scena) {
         this.scene = scena;
         this.infoPlayers = {};
@@ -7,6 +15,10 @@ export class OtherP {
         this.anims = {};
     }
 
+    /**
+     * Actualiza la lista de jugadores por la indicada
+     * @param {*} players 
+     */
     updateInfo(players) {
         this.infoPlayers = players;
     }
@@ -41,6 +53,10 @@ export class OtherP {
         });
     }
 
+    /**
+     * Elimina al jugador de la escena
+     * @param {String} ID 
+     */
     delete(ID) {
         delete this.infoPlayers[ID];
         this.players[ID].destroy();

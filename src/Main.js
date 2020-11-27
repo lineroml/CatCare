@@ -3,13 +3,15 @@ import{ Ground } from '/Ground.js';
 import { Cat } from './Cat.js';
 import { Plate } from './Plate.js';
 
+/**
+ * Escena principal de juego
+ */
 export class Main extends Phaser.Scene {
     constructor() {
         super({ key: 'main' });
     }
 
     preload() {
-        console.log('estoy en main');
         this.load.image('bg', '/resources/game/BackGround/bg.png');
         this.load.spritesheet('Eli', '/resources/game/Entities/helper.png', {
             frameWidth: 80,
@@ -27,13 +29,15 @@ export class Main extends Phaser.Scene {
         this.cats = [new Cat(this,'Charlotto','GREEN'), new Cat(this,'Lion','GREEN')];
         this.plates = [new Plate(this,'WATER',0), new Plate(this,'FOOD',1)];
     }
+
     create() {
         //imagen de fondo y camara
         var bg = this.add.image(0, 0, 'bg').setOrigin(0, 0);
         this.physics.world.setBounds(0, 0, bg.displayWidth, bg.displayHeight);
         this.cameras.main.setBounds(0, 0, bg.displayWidth, bg.displayHeight);
-        //imagen de fondo y camara
+        
         this.add.image(bg.displayWidth/2,bg.displayHeight-400,'logo').setScale(0.3);
+
         //Creando plataformas
         this.plataforms.create();
         for (let i = 0; i < 7; i++) {
@@ -94,6 +98,7 @@ export class Main extends Phaser.Scene {
         this.cameras.main.startFollow(this.player.player);
         //Enfocando camara al jugador
     }
+    
     update() {
         this.player.update();
         this.cats[0].update();

@@ -5,6 +5,9 @@ import { Plate } from '/Plate.js';
 import { Judge } from '/Judge.js';
 import { Cat } from '/Cat.js';
 
+/**
+ * Escena que representa el primer mundo en modalidad 
+ */
 export class ScenaP extends Phaser.Scene {
     constructor() {
         super({ key: 'test' });
@@ -77,12 +80,17 @@ export class ScenaP extends Phaser.Scene {
 
         this.judge.create();
     }
+
     update() {
         this.player.update();
         this.catUpdate();
         this.judge.update();
     }
 
+    /**
+     * Método encargado de actualizar el estado de cada gato de la escena
+     * y crear la lista desplegable con indicando los estados anormales de los mininos
+     */
     catUpdate() {
         for (let i = 0; i < this.catStates.length; i++) {
             var cat = this.catStates[i];

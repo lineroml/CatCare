@@ -1,4 +1,11 @@
+/**
+ * Clase que administra las herramientas utilizadas por el jugador
+ */
 export class Tool {
+    /**
+     * Crea un objeto Tool en la escena indicada
+     * @param {Phaser.Scene} scena 
+     */
     constructor(scena) {
         this.scene = scena;
         this.selectedTool = undefined;
@@ -14,26 +21,41 @@ export class Tool {
         this.tool.setScrollFactor(0,0);
     }
 
+    /**
+     * Selecciona la herramienta de Comida
+     */
     selectFood() {
         this.selectedTool = 'FOOD';
         this.tool.setTexture('fIcon');
     }
 
+    /**
+     * Selecciona la herramienta de Agua
+     */
     selectWater() {
         this.selectedTool = 'WATER';
         this.tool.setTexture('wIcon');
     }
 
+    /**
+     * Selecciona la herramienta de Medicina
+     */
     selectMed() {
         this.selectedTool = 'MED';
         this.tool.setTexture('mIcon');
     }
 
+    /**
+     * Selecciona la herramienta de Juguete
+     */
     selectFun() {
         this.selectedTool = 'FUN';
         this.tool.setTexture('jIcon');
     }
 
+    /**
+     * Desequipa la herramienta seleccionada actualmente
+     */
     dropTool() {
         this.selectedTool = undefined;
         this.tool.setTexture('vIcon')

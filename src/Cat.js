@@ -1,3 +1,8 @@
+import { Plate } from "./Plate.js";
+
+/**
+ * Clase que contiene la lógica detrás del comportamiento de in gato
+ */
 export class Cat {
     constructor(scena, name, type) {
         this.animation = 'Sleep';
@@ -39,6 +44,11 @@ export class Cat {
         }
     }
 
+    /**
+     * Función que asigna al gato la posición indicada
+     * @param {integer} posX 
+     * @param {integer} posY 
+     */
     setXY(posX, posY) {
         this.cat.x = posX;
         this.cat.y = posY;
@@ -179,6 +189,10 @@ export class Cat {
 
     }
 
+    /**
+     * Método que contiene la logica detrás del movimiento de los gatos en base a su color en el semaforo
+     * de felinorte, y su estado
+     */
     move() {
         if (this.state != 'HUNGRY' & this.state != 'THIRSTY') {
             var choose = Phaser.Math.Between(0, 1);
@@ -244,6 +258,9 @@ export class Cat {
         }
     }
 
+    /**
+     * Método que contiene la logica detrás del cambio de estado de los gatos
+     */
     stateChange() {
         this.stateTimer
         var p = Phaser.Math.Between(0, 4);
@@ -269,6 +286,12 @@ export class Cat {
         this.stateTimer.delay = Phaser.Math.Between(6000, 20000);
     }
 
+    /**
+     * Función callback que contiene el comportamiento de un gato en base a su color en el semaforo gatuno de
+     * felinorte y la velocidad con la que se le aproxime el jugador
+     * @param {Phaser.Physics.Arcade.image} zone 
+     * @param {Phaser.Physics.Arcade.image} player 
+     */
     approach(zone, player) {
         var xVel = player.body.velocity.x;
         if (xVel > 80 | xVel < -80) {
@@ -301,19 +324,23 @@ export class Cat {
         }
     }
 
+    /**
+     * Función callback que contiene la logica detrás dela interaccion entre la herramienta del jugador y el gato
+     * dependiendo de su estado
+     */
     toolAndCat() {
         var stateChanged = false;
         var player = this.scene.player;
         switch (this.state) {
             case 'SICK':
-                if (player.getTool() == 'MED') {
+                if (player.tool.selectedTool == 'MED') {
                     this.state = 'NORMAL';
                     player.dropTool();
                     stateChanged = true;
                 }
                 break;
             case 'BORED':
-                if (player.getTool() == 'FUN') {
+                if (player.tool.selectedTool == 'FUN') {
                     this.state = 'NORMAL';
                     player.dropTool();
                     stateChanged = true;
@@ -334,6 +361,11 @@ export class Cat {
 
     }
 
+    /**
+     * Función que dado un par coordenado regresa el objeto Plate en dicha posición
+     * @param {integer[]} coord 
+     * @returns {Plate}
+     */
     plateByCoord(coord) {
         var a = null;
         this.scene.plates.forEach(plate => {

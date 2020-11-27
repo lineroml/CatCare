@@ -1,4 +1,13 @@
+/**
+ * Clase encargada de administrar el sistema de puntos y tiempo del juego
+ */
 export class Judge {
+    /**
+     * Crea un objeto Judge con un maximo en la escena indicada con un contador y un máximo puntaje
+     * @param {Phaser.Scene} scena 
+     * @param {integer[]} time 
+     * @param {integer} maxScore 
+     */
     constructor(scena, time, maxScore) {
         this.time = time;//[0] = min  [1]= seg
         this.score = 0;
@@ -35,6 +44,9 @@ export class Judge {
         }
     }
 
+    /**
+     * Función callback que ejecuta la logica detrás del funcionamiento del reloj
+     */
     second() {
         this.time[1]--;
         if (this.time[1] < 0) {
@@ -49,6 +61,10 @@ export class Judge {
         this.timeText.setText(this.time[0] + ':' + this.time[1]);
     }
 
+    /**
+     * Metodo que añade la cantidad de puntos inndicados al jugador
+     * @param {integer} points 
+     */
     addPoints(points) {
         this.score += points;
         this.scoreText.setText(this.score + '/' + this.maxScore);
@@ -61,6 +77,10 @@ export class Judge {
             this.scene.socket.emit("updatePoints", { ID: this.scene.socket.id, score: this.score });
     }
 
+    /**
+     * Metodo que resta la cantidad de puntos indicados al jugador
+     * @param {integer} points 
+     */
     restPoints(points) {
         this.score -= points;
         this.scoreText.setText(this.score + '/' + this.maxScore);

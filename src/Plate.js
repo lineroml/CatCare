@@ -1,4 +1,14 @@
+/**
+ * Clase que contiene la logica detrás de un plato y sus interacciones con el resto de elementos
+ * del nivel
+ */
 export class Plate {
+    /**
+     * Crea un objeto de tipo Plate en la escena indicada
+     * @param {Phaser.Scene} scena Escena donde se posicionan los platos
+     * @param {String} tipe Tipo de plato
+     * @param {integer} id Id única del plato
+     */
     constructor(scena, tipe, id) {
         this.scene = scena;
         this.type = tipe;
@@ -11,11 +21,20 @@ export class Plate {
             this.scene.socket.emit("plateCreated", { password: scena.socket.id, ID: id, type: tipe, full: false })
     }
 
+    /**
+     * Posiciona el plato en las coordenadas dadas
+     * @param {integer} x coordenada x del plato 
+     * @param {integer} y coordenada y del plato
+     */
     put(x, y) {
         this.plate = this.scene.physics.add.image(x, y, 'plate');
         this.scene.physics.add.collider(this.plate, this.scene.plataforms.plat);
     }
 
+    /**
+     * Función que contiene la logica detrás de la interacción del jugador con un plato
+     * en pos de rellenarlo
+     */
     fill() {
         if (!this.full) {
             var t = (this.type == 'FOOD') ? 'fPlate' : 'wPlate';
@@ -30,6 +49,10 @@ export class Plate {
         return false;
     }
 
+    /**
+     * Función que contien la logica destrás de la interaccion del gat con un plato
+     * en pos de usar este
+     */
     use() {
         this.full = false;
         this.plate.setTexture('plate');
@@ -38,6 +61,10 @@ export class Plate {
         }
     }
 
+    /**
+     * Función que cambia el estado y la textura del plato según corresponda si está lleno o no
+     * @param {Boolean} state Estado del plato
+     */
     change(state){
         if(state){
             this.full = true;

@@ -1,3 +1,6 @@
+/**
+ * Escena correspondiente al menú de pausa del juego
+ */
 export class PauseMenu extends Phaser.Scene{
     constructor(){
         super({key: 'PauseMenu'});
