@@ -38,7 +38,7 @@ io.on("connection", (socket) => {
     y: 500,
     points: 0,
     skin: 'player',
-    tool: undefined
+    animation: 'idle'
   };
 
   socket.on("setName", name =>{
@@ -133,8 +133,8 @@ io.on("connection", (socket) => {
   });
 
   socket.on("ItEnded", () => {
-    socket.emit("STOP");
-    socket.broadcast.emit("STOP");
+    socket.emit("STOP",this.player[socket.id].name);
+    socket.broadcast.emit("STOP",this.player[socket.id].name);
   });
   socket.on("disconnect", () => {
     numPlayers--;
